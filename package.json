@@ -27,5 +27,9 @@
   "bugs": {
     "url": "https://github.com/cryptocoinjs/hdkey/issues"
   },
-  "homepage": "https://github.com/cryptocoinjs/hdkey"
+  "homepage": "https://github.com/cryptocoinjs/hdkey",
+  "devDependencies": {
+    "terst": "^0.1.0",
+    "mocha": "^1.19.0"
+  }
 }
