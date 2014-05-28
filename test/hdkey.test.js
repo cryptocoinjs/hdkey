@@ -1,7 +1,12 @@
+var hdkey = require('../')
+var fixtures = require('./fixtures')
+
 require('terst')
 
-var hdkey = require('../')
-
 describe('hdkey', function() {
-  
+  it('should properly derive the chain path', function() {
+    fixtures.valid.forEach(function(f) {
+      
+    })    
+  })  
 })
