@@ -3,12 +3,6 @@
   "version": "0.0.1",
   "description": "Bitcoin BIP32 hierarchical deterministic keys",
   "main": "lib/hdkey.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "mocha"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/cryptocoinjs/hdkey"
