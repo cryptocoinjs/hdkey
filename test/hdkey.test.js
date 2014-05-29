@@ -12,7 +12,7 @@ function encode(buf) {
 }
 
 describe('hdkey', function() {
-  var f = fixtures.valid[0]//.forEach(function(f) {
+  var f = fixtures.valid.forEach(function(f) {
     it('should properly derive the chain path: ' + f.path, function() {
     
       var hdkey = new HDKey(new Buffer(f.seed, 'hex'))
@@ -21,5 +21,5 @@ describe('hdkey', function() {
       EQ (encode(childkey.private), f.private)
       //EQ (encode(childkey.public), f.public)
     })    
-  //})  
+  })  
 })
