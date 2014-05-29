@@ -22,8 +22,6 @@
     "deterministic",
     "crypto"
   ],
-  "author": "",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cryptocoinjs/hdkey/issues"
   },
@@ -31,11 +29,19 @@
   "devDependencies": {
     "terst": "^0.1.0",
     "mocha": "^1.19.0",
-    "bs58": "^1.0.0"
+    "bs58": "^1.0.0",
+    "coveralls": "^2.10.0",
+    "mocha-lcov-reporter": "0.0.1",
+    "istanbul": "^0.2.10"
   },
   "dependencies": {
     "sha512": "0.0.1",
     "eckey": "^0.4.2",
     "bigi": "^1.1.0"
+  },
+  "scripts": {
+    "unit": "./node_modules/.bin/mocha",
+    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --reporter list test/*.js",
+    "coveralls": "npm run-script coverage && node ./node_modules/.bin/coveralls < coverage/lcov.info"
   }
 }
