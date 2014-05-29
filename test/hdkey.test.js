@@ -19,7 +19,7 @@ describe('hdkey', function() {
       var childkey = hdkey.derive(f.path)
 
       EQ (encode(childkey.private), f.private)
-      //EQ (encode(childkey.public), f.public)
+      EQ (encode(childkey.public), f.public)
     })    
   })  
 })
