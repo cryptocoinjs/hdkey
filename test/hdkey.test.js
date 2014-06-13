@@ -1,10 +1,9 @@
+var assert = require('assert')
 var crypto = require('crypto')
 var bs58 = require('bs58')
 var HDKey = require('../')
 
 var fixtures = require('./fixtures/hdkey')
-
-require('terst')
 
 function encode(buf) {
   var hash = crypto.createHash('sha256').update(buf).digest()
@@ -19,8 +18,8 @@ describe('hdkey', function() {
       var hdkey = new HDKey(new Buffer(f.seed, 'hex'))
       var childkey = hdkey.derive(f.path)
 
-      EQ (encode(childkey.private), f.private)
-      EQ (encode(childkey.public), f.public)
+      assert.equal(encode(childkey.private), f.private)
+      assert.equal(encode(childkey.public), f.public)
     })    
   })  
 })
