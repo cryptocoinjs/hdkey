@@ -1,7 +1,8 @@
 var crypto = require('crypto')
 var bs58 = require('bs58')
 var HDKey = require('../')
-var fixtures = require('./fixtures')
+
+var fixtures = require('./fixtures/hdkey')
 
 require('terst')
 
