@@ -12,14 +12,16 @@ function encode(buf) {
 }
 
 describe('hdkey', function() {
-  var f = fixtures.valid.forEach(function(f) {
-    it('should properly derive the chain path: ' + f.path, function() {
-    
-      var hdkey = new HDKey(new Buffer(f.seed, 'hex'))
-      var childkey = hdkey.derive(f.path)
+  describe('+ fromMasterSeed', function() {
+    var f = fixtures.valid.forEach(function(f) {
+      it('should properly derive the chain path: ' + f.path, function() {
+      
+        var hdkey = HDKey.fromMasterSeed(new Buffer(f.seed, 'hex'))
+        var childkey = hdkey.derive(f.path)
 
-      assert.equal(encode(childkey.private), f.private)
-      assert.equal(encode(childkey.public), f.public)
-    })    
-  })  
+        assert.equal(encode(childkey.privateOld), f.private)
+        assert.equal(encode(childkey.publicOld), f.public)
+      })    
+    }) 
+  }) 
 })
