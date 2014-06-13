@@ -30,8 +30,8 @@
   },
   "dependencies": {
     "sha512": "0.0.1",
-    "eckey": "^0.4.2",
-    "bigi": "^1.1.0"
+    "bigi": "^1.1.0",
+    "ecurve": "^0.8.0"
   },
   "scripts": {
     "unit": "./node_modules/.bin/mocha",
