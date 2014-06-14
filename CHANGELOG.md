@@ -7,6 +7,7 @@ x.y.z / 2014-06-dd
 - added method `fromMasterSeed(seedBuffer, [versions])`
 - changed constructor from `new HDKey(masterSeed, [versions])` to `new HDKey([versions])`
 - added properties: `privateKey` and `publicKey`
+- removed method `getIdentifier()`, added property `identifier`
 
 0.0.1 / 2014-05-29
 ------------------
