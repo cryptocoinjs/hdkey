@@ -9,6 +9,8 @@ x.y.z / 2014-06-dd
 - added properties: `privateKey` and `publicKey`
 - removed method `getIdentifier()`, added property `identifier`
 - removed method `getFingerprint()`, added property `fingerprint`
+- renamed `private` to `privateExtendedKey`
+- renamed `public` to `publicExtendedKey`
 
 0.0.1 / 2014-05-29
 ------------------

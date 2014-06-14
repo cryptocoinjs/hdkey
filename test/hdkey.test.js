@@ -23,8 +23,8 @@ describe('hdkey', function() {
         var hdkey = HDKey.fromMasterSeed(new Buffer(f.seed, 'hex'))
         var childkey = hdkey.derive(f.path)
 
-        assert.equal(encode(childkey.privateOld), f.private)
-        assert.equal(encode(childkey.publicOld), f.public)
+        assert.equal(encode(childkey.privateExtendedKey), f.private)
+        assert.equal(encode(childkey.publicExtendedKey), f.public)
       })    
     }) 
   })
