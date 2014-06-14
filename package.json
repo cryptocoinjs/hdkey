@@ -26,7 +26,8 @@
     "coveralls": "^2.10.0",
     "mocha-lcov-reporter": "0.0.1",
     "istanbul": "^0.2.10",
-    "secure-random": "^1.0.0"
+    "secure-random": "^1.0.0",
+    "mochify": "^0.9.3"
   },
   "dependencies": {
     "sha512": "0.0.1",
@@ -37,5 +38,8 @@
     "unit": "./node_modules/.bin/mocha",
     "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --reporter list test/*.js",
     "coveralls": "npm run-script coverage && node ./node_modules/.bin/coveralls < coverage/lcov.info"
+  },
+  "browser": {
+    "crypto": "crypto-browserify"
   }
 }
