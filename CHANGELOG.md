@@ -8,6 +8,7 @@ x.y.z / 2014-06-dd
 - changed constructor from `new HDKey(masterSeed, [versions])` to `new HDKey([versions])`
 - added properties: `privateKey` and `publicKey`
 - removed method `getIdentifier()`, added property `identifier`
+- removed method `getFingerprint()`, added property `fingerprint`
 
 0.0.1 / 2014-05-29
 ------------------
