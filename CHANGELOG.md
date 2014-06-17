@@ -1,4 +1,4 @@
-x.y.z / 2014-06-dd
+0.1.0 / 2014-06-16
 ------------------
 - removed semicolons per http://cryptocoinjs.com/about/contributing/#semicolons
 - removed `ECKey` dep
