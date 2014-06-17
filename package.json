@@ -27,7 +27,8 @@
     "mocha-lcov-reporter": "0.0.1",
     "istanbul": "^0.2.10",
     "secure-random": "^1.0.0",
-    "mochify": "^0.9.3"
+    "mochify": "^0.9.3",
+    "crypto-browserify": "^2.1.8"
   },
   "dependencies": {
     "sha512": "0.0.1",
