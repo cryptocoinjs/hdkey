@@ -23,9 +23,6 @@ describe('hdkey', function() {
         var hdkey = HDKey.fromMasterSeed(new Buffer(f.seed, 'hex'))
         var childkey = hdkey.derive(f.path)
 
-        if (encode(childkey.privateExtendedKey) == "xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j")
-          console.log(childkey.fingerprint.toString('16'))
-
         assert.equal(encode(childkey.privateExtendedKey), f.private)
         assert.equal(encode(childkey.publicExtendedKey), f.public)
       })    

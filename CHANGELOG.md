@@ -11,6 +11,7 @@ x.y.z / 2014-06-dd
 - removed method `getFingerprint()`, added property `fingerprint`
 - renamed `private` to `privateExtendedKey`
 - renamed `public` to `publicExtendedKey`
+- added method `fromExtendedKey()`
 
 0.0.1 / 2014-05-29
 ------------------
