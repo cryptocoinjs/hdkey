@@ -48,7 +48,7 @@ describe('hdkey', function() {
 
     it('should not throw if key is 33 bytes (compressed)', function() {
       var priv = secureRandom.randomBuffer(32)
-      var pub = ecparams.params.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(true)
+      var pub = ecparams.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(true)
       assert.equal(pub.length, 33)
       var hdkey = new HDKey()
       hdkey.publicKey = pub
@@ -56,7 +56,7 @@ describe('hdkey', function() {
 
     it('should not throw if key is 65 bytes (not compressed)', function() {
       var priv = secureRandom.randomBuffer(32)
-      var pub = ecparams.params.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(false)
+      var pub = ecparams.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(false)
       assert.equal(pub.length, 65)
       var hdkey = new HDKey()
       hdkey.publicKey = pub

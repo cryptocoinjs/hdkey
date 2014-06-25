@@ -1,3 +1,7 @@
+0.2.0 / 2014-06-25
+------------------
+- upgraded `"ecurve": "^0.8.0"` to `"ecurve": "^1.0.0"`
+
 0.1.0 / 2014-06-16
 ------------------
 - removed semicolons per http://cryptocoinjs.com/about/contributing/#semicolons
