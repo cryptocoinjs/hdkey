@@ -1,7 +1,7 @@
 var assert = require('assert')
 var crypto = require('crypto')
 var BigInteger = require('bigi')
-var bs58 = require('bs58')
+var cs = require('coinstring')
 var ecurve = require('ecurve')
 var secureRandom = require('secure-random')
 var ecparams = ecurve.getCurveByName('secp256k1')
@@ -10,9 +10,7 @@ var HDKey = require('../')
 var fixtures = require('./fixtures/hdkey')
 
 function encode(buf) {
-  var hash = crypto.createHash('sha256').update(buf).digest()
-  var chksum = crypto.createHash('sha256').update(hash).digest().slice(0,4)
-  return bs58.encode(Buffer.concat([buf, chksum]))
+  return cs.encode(buf)
 }
 
 describe('hdkey', function() {
@@ -68,7 +66,7 @@ describe('hdkey', function() {
       it('should parse it', function() {
         //m/0/2147483647'/1/2147483646'/2
         var key = "xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j"
-        var keyBuffer = bs58.decode(key).slice(0, 78)
+        var keyBuffer = cs.decode(key).slice(0, 78)//bs58.decode(key).slice(0, 78)
         var hdkey = HDKey.fromExtendedKey(keyBuffer)
         assert.equal(hdkey.versions.private, 0x0488ade4)
         assert.equal(hdkey.versions.public, 0x0488b21e)
@@ -86,7 +84,7 @@ describe('hdkey', function() {
       it('should parse it', function() {
         //m/0/2147483647'/1/2147483646'/2
         var key = "xpub6FnCn6nSzZAw5Tw7cgR9bi15UV96gLZhjDstkXXxvCLsUXBGXPdSnLFbdpq8p9HmGsApME5hQTZ3emM2rnY5agb9rXpVGyy3bdW6EEgAtqt"
-        var keyBuffer = bs58.decode(key).slice(0, 78)
+        var keyBuffer = cs.decode(key).slice(0, 78)//bs58.decode(key).slice(0, 78)
         var hdkey = HDKey.fromExtendedKey(keyBuffer)
         assert.equal(hdkey.versions.private, 0x0488ade4)
         assert.equal(hdkey.versions.public, 0x0488b21e)

@@ -22,18 +22,19 @@
   "homepage": "https://github.com/cryptocoinjs/hdkey",
   "devDependencies": {
     "mocha": "^1.19.0",
-    "bs58": "^1.0.0",
     "coveralls": "^2.10.0",
     "mocha-lcov-reporter": "0.0.1",
     "istanbul": "^0.2.10",
     "secure-random": "^1.0.0",
     "mochify": "^0.9.3",
-    "crypto-browserify": "^2.1.8"
+    "crypto-browserify": "^2.1.8",
+    "coinstring": "^2.0.0"
   },
   "dependencies": {
     "sha512": "0.0.1",
     "bigi": "^1.1.0",
-    "ecurve": "^1.0.0"
+    "ecurve": "^1.0.0",
+    "coinstring": "^2.0.0"
   },
   "scripts": {
     "unit": "./node_modules/.bin/mocha",
