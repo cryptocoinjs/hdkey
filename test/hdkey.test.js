@@ -4,7 +4,7 @@ var BigInteger = require('bigi')
 var cs = require('coinstring')
 var ecurve = require('ecurve')
 var secureRandom = require('secure-random')
-var ecparams = ecurve.getCurveByName('secp256k1')
+var curve = ecurve.getCurveByName('secp256k1')
 
 var HDKey = require('../')
 var fixtures = require('./fixtures/hdkey')
@@ -23,7 +23,7 @@ describe('hdkey', function() {
 
         assert.equal(encode(childkey.privateExtendedKey), f.private)
         assert.equal(encode(childkey.publicExtendedKey), f.public)
-      })    
+      })
     }) 
   })
 
@@ -46,7 +46,7 @@ describe('hdkey', function() {
 
     it('should not throw if key is 33 bytes (compressed)', function() {
       var priv = secureRandom.randomBuffer(32)
-      var pub = ecparams.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(true)
+      var pub = curve.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(true)
       assert.equal(pub.length, 33)
       var hdkey = new HDKey()
       hdkey.publicKey = pub
@@ -54,7 +54,7 @@ describe('hdkey', function() {
 
     it('should not throw if key is 65 bytes (not compressed)', function() {
       var priv = secureRandom.randomBuffer(32)
-      var pub = ecparams.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(false)
+      var pub = curve.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(false)
       assert.equal(pub.length, 65)
       var hdkey = new HDKey()
       hdkey.publicKey = pub
@@ -66,7 +66,7 @@ describe('hdkey', function() {
       it('should parse it', function() {
         //m/0/2147483647'/1/2147483646'/2
         var key = "xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j"
-        var keyBuffer = cs.decode(key).slice(0, 78)//bs58.decode(key).slice(0, 78)
+        var keyBuffer = cs.decode(key)
         var hdkey = HDKey.fromExtendedKey(keyBuffer)
         assert.equal(hdkey.versions.private, 0x0488ade4)
         assert.equal(hdkey.versions.public, 0x0488b21e)
@@ -84,7 +84,7 @@ describe('hdkey', function() {
       it('should parse it', function() {
         //m/0/2147483647'/1/2147483646'/2
         var key = "xpub6FnCn6nSzZAw5Tw7cgR9bi15UV96gLZhjDstkXXxvCLsUXBGXPdSnLFbdpq8p9HmGsApME5hQTZ3emM2rnY5agb9rXpVGyy3bdW6EEgAtqt"
-        var keyBuffer = cs.decode(key).slice(0, 78)//bs58.decode(key).slice(0, 78)
+        var keyBuffer = cs.decode(key)
         var hdkey = HDKey.fromExtendedKey(keyBuffer)
         assert.equal(hdkey.versions.private, 0x0488ade4)
         assert.equal(hdkey.versions.public, 0x0488b21e)
@@ -96,6 +96,21 @@ describe('hdkey', function() {
         assert.equal(hdkey.publicKey.toString('hex'), '024d902e1a2fc7a8755ab5b694c575fce742c48d9ff192e63df5193e4c7afe1f9c')
         assert.equal(hdkey.identifier.toString('hex'), '26132fdbe7bf89cbc64cf8dafa3f9f88b8666220')
       })
+    })
+  })
+
+  describe('> when deriving public key', function() {
+    it('should work', function() {
+      var key = "xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EGMcet8"
+      var keyBuffer = cs.decode(key)
+      var hdkey = HDKey.fromExtendedKey(keyBuffer)
+
+      var path = "m/3353535/2223/0/99424/4/33"
+      var derivedHDKey = hdkey.derive(path)
+
+      var expected = "xpub6JdKdVJtdx6sC3nh87pDvnGhotXuU5Kz6Qy7Piy84vUAwWSYShsUGULE8u6gCivTHgz7cCKJHiXaaMeieB4YnoFVAsNgHHKXJ2mN6jCMbH1"
+      assert.equal(cs.encode(derivedHDKey.publicExtendedKey), expected)
+
     })
   })
 })
