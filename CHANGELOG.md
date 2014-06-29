@@ -1,3 +1,8 @@
+0.3.0 / 2014-06-29
+------------------
+- bugfix: if private key was less than 32 bytes, pad out to 32 bytes with leading zeros (this happens in derive)
+
+
 0.2.0 / 2014-06-25
 ------------------
 - upgraded `"ecurve": "^0.8.0"` to `"ecurve": "^1.0.0"`

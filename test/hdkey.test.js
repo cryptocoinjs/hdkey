@@ -113,4 +113,15 @@ describe('hdkey', function() {
 
     })
   })
+
+  describe('> when private key integer is less than 32 bytes', function() {
+    it('should work', function() {
+      var seed = "000102030405060708090a0b0c0d0e0f"
+      var masterKey = HDKey.fromMasterSeed(new Buffer(seed, 'hex'))
+      
+      var newKey = masterKey.derive("m/44'/6'/4'")
+      var expected = 'xprv9ymoag6W7cR6KBcJzhCM6qqTrb3rRVVwXKzwNqp1tDWcwierEv3BA9if3ARHMhMPh9u2jNoutcgpUBLMfq3kADDo7LzfoCnhhXMRGX3PXDx'
+      assert.equal(cs.encode(newKey.privateExtendedKey), expected)
+    })
+  })
 })
