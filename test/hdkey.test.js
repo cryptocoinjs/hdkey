@@ -62,8 +62,7 @@ describe('hdkey', function() {
       it('should parse it', function() {
         //m/0/2147483647'/1/2147483646'/2
         var key = "xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j"
-        var keyBuffer = cs.decode(key)
-        var hdkey = HDKey.fromExtendedKey(keyBuffer)
+        var hdkey = HDKey.fromExtendedKey(key)
         assert.equal(hdkey.versions.private, 0x0488ade4)
         assert.equal(hdkey.versions.public, 0x0488b21e)
         assert.equal(hdkey.depth, 5)
@@ -80,8 +79,7 @@ describe('hdkey', function() {
       it('should parse it', function() {
         //m/0/2147483647'/1/2147483646'/2
         var key = "xpub6FnCn6nSzZAw5Tw7cgR9bi15UV96gLZhjDstkXXxvCLsUXBGXPdSnLFbdpq8p9HmGsApME5hQTZ3emM2rnY5agb9rXpVGyy3bdW6EEgAtqt"
-        var keyBuffer = cs.decode(key)
-        var hdkey = HDKey.fromExtendedKey(keyBuffer)
+        var hdkey = HDKey.fromExtendedKey(key)
         assert.equal(hdkey.versions.private, 0x0488ade4)
         assert.equal(hdkey.versions.public, 0x0488b21e)
         assert.equal(hdkey.depth, 5)
@@ -98,8 +96,7 @@ describe('hdkey', function() {
   describe('> when deriving public key', function() {
     it('should work', function() {
       var key = "xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EGMcet8"
-      var keyBuffer = cs.decode(key)
-      var hdkey = HDKey.fromExtendedKey(keyBuffer)
+      var hdkey = HDKey.fromExtendedKey(key)
 
       var path = "m/3353535/2223/0/99424/4/33"
       var derivedHDKey = hdkey.derive(path)

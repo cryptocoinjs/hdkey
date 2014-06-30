@@ -2,6 +2,7 @@
 ------------------
 - bugfix: if private key was less than 32 bytes, pad out to 32 bytes with leading zeros (this happens in derive)
 - changed behavior of `privateExtendedKey()` and `publicExtendedKey()` to return base 58 encoded `string` instead of `Buffer`
+- changed behavior of `fromExtendedKey()` from accepting a type of `Buffer` bytes to base58 `string`
 
 0.2.0 / 2014-06-25
 ------------------
