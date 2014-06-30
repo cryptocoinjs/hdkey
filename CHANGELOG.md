@@ -7,7 +7,7 @@
 0.2.0 / 2014-06-25
 ------------------
 - upgraded `"ecurve": "^0.8.0"` to `"ecurve": "^1.0.0"`
-- added functionality to dervice public to public child keys
+- added functionality to derive public to public child keys
 
 0.1.0 / 2014-06-16
 ------------------
