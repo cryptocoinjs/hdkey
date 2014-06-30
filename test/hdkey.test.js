@@ -9,10 +9,6 @@ var curve = ecurve.getCurveByName('secp256k1')
 var HDKey = require('../')
 var fixtures = require('./fixtures/hdkey')
 
-function encode(buf) {
-  return cs.encode(buf)
-}
-
 describe('hdkey', function() {
   describe('+ fromMasterSeed', function() {
     var f = fixtures.valid.forEach(function(f) {
@@ -21,8 +17,8 @@ describe('hdkey', function() {
         var hdkey = HDKey.fromMasterSeed(new Buffer(f.seed, 'hex'))
         var childkey = hdkey.derive(f.path)
 
-        assert.equal(encode(childkey.privateExtendedKey), f.private)
-        assert.equal(encode(childkey.publicExtendedKey), f.public)
+        assert.equal(childkey.privateExtendedKey, f.private)
+        assert.equal(childkey.publicExtendedKey, f.public)
       })
     }) 
   })
@@ -109,7 +105,7 @@ describe('hdkey', function() {
       var derivedHDKey = hdkey.derive(path)
 
       var expected = "xpub6JdKdVJtdx6sC3nh87pDvnGhotXuU5Kz6Qy7Piy84vUAwWSYShsUGULE8u6gCivTHgz7cCKJHiXaaMeieB4YnoFVAsNgHHKXJ2mN6jCMbH1"
-      assert.equal(cs.encode(derivedHDKey.publicExtendedKey), expected)
+      assert.equal(derivedHDKey.publicExtendedKey, expected)
 
     })
   })
@@ -121,7 +117,7 @@ describe('hdkey', function() {
       
       var newKey = masterKey.derive("m/44'/6'/4'")
       var expected = 'xprv9ymoag6W7cR6KBcJzhCM6qqTrb3rRVVwXKzwNqp1tDWcwierEv3BA9if3ARHMhMPh9u2jNoutcgpUBLMfq3kADDo7LzfoCnhhXMRGX3PXDx'
-      assert.equal(cs.encode(newKey.privateExtendedKey), expected)
+      assert.equal(newKey.privateExtendedKey, expected)
     })
   })
 })
