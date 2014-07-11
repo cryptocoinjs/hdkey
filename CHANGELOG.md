@@ -1,3 +1,7 @@
+0.3.1 / 2014-07-11
+------------------
+- removed superfluous code `this._privateKeyBigInteger`
+
 0.3.0 / 2014-06-29
 ------------------
 - bugfix: if private key was less than 32 bytes, pad out to 32 bytes with leading zeros (this happens in derive)
