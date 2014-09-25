@@ -1,3 +1,7 @@
+0.4.0 / 2014-09-24
+------------------
+- dropped `sha512` dependency and upgraded to crypto-browserify that supports sha512
+
 0.3.1 / 2014-07-11
 ------------------
 - removed superfluous code `this._privateKeyBigInteger`
