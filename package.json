@@ -1,6 +1,6 @@
 {
   "name": "hdkey",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Bitcoin BIP32 hierarchical deterministic keys",
   "main": "lib/hdkey.js",
   "repository": {

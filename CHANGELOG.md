@@ -1,3 +1,8 @@
+0.6.0 / 2015-07-02
+------------------
+- **breaking** (same day though, haha). Changed `publicExtendedKey`/`privateExtendedKey` in `JSON` methods to `xpub`/`xpriv`
+- export `HARDENED_OFFSET`
+
 0.5.0 / 2015-07-02
 ------------------
 - JavaScript Standard Style
