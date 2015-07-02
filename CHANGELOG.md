@@ -1,3 +1,9 @@
+0.5.0 / 2015-07-02
+------------------
+- JavaScript Standard Style
+- fix rare condition for BIP32 consistency: https://github.com/cryptocoinjs/hdkey/issues/1
+- added `toJSON()/fromJSON()`
+
 0.4.0 / 2014-09-24
 ------------------
 - dropped `sha512` dependency and upgraded to crypto-browserify that supports sha512
