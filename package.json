@@ -21,13 +21,12 @@
   },
   "homepage": "https://github.com/cryptocoinjs/hdkey",
   "devDependencies": {
-    "mocha": "^1.19.0",
     "coveralls": "^2.10.0",
+    "istanbul": "^0.3.17",
+    "mocha": "^2.2.5",
     "mocha-lcov-reporter": "0.0.1",
-    "istanbul": "^0.2.10",
-    "secure-random": "^1.0.0",
-    "mochify": "^1.1.2",
-    "crypto-browserify": "^3.2.4"
+    "mochify": "^2.10.0",
+    "secure-random": "^1.0.0"
   },
   "dependencies": {
     "bigi": "^1.1.0",
@@ -35,7 +34,8 @@
     "coinstring": "^2.0.0"
   },
   "scripts": {
-    "unit": "./node_modules/.bin/mocha",
+    "browser-test": "mochify --wd -R spec",
+    "test": "standard && mocha",
     "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --reporter list test/*.js",
     "coveralls": "npm run-script coverage && node ./node_modules/.bin/coveralls < coverage/lcov.info"
   }
