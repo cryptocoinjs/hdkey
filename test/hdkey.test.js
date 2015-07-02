@@ -133,4 +133,10 @@ describe('hdkey', function () {
       assert.equal(newKey.privateExtendedKey, expected)
     })
   })
+
+  describe('HARDENED_OFFSET', function () {
+    it('should be set', function () {
+      assert(HDKey.HARDENED_OFFSET)
+    })
+  })
 })
