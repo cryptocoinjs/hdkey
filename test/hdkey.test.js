@@ -25,8 +25,8 @@ describe('hdkey', function () {
           var childkey = hdkey.derive(f.path)
 
           var obj = {
-            privateExtendedKey: f.private,
-            publicExtendedKey: f.public
+            xpriv: f.private,
+            xpub: f.public
           }
 
           assert.deepEqual(childkey.toJSON(), obj)
