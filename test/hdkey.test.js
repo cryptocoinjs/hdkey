@@ -18,6 +18,24 @@ describe('hdkey', function () {
         assert.equal(childkey.privateExtendedKey, f.private)
         assert.equal(childkey.publicExtendedKey, f.public)
       })
+
+      describe('> ' + f.path + ' toJSON() / fromJSON()', function () {
+        it('should return an object read for JSON serialization', function () {
+          var hdkey = HDKey.fromMasterSeed(new Buffer(f.seed, 'hex'))
+          var childkey = hdkey.derive(f.path)
+
+          var obj = {
+            privateExtendedKey: f.private,
+            publicExtendedKey: f.public
+          }
+
+          assert.deepEqual(childkey.toJSON(), obj)
+
+          var newKey = HDKey.fromJSON(obj)
+          assert.strictEqual(newKey.privateExtendedKey, f.private)
+          assert.strictEqual(newKey.publicExtendedKey, f.public)
+        })
+      })
     })
   })
 
