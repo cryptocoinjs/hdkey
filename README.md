@@ -8,6 +8,8 @@ A JavaScript component for [BIP32](https://github.com/bitcoin/bips/blob/master/b
 
 Thanks to the active BitcoinJS team and their hard work - some code borrowed from it.
 
+**Note: Will be deprecating and replacing with** https://github.com/bitcoinjs/bip32
+
 Installation
 ------------
 
