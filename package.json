@@ -7,6 +7,7 @@
     "type": "git",
     "url": "git://github.com/cryptocoinjs/hdkey"
   },
+  "license": "MIT",
   "keywords": [
     "bitcoin",
     "bip32",
@@ -31,8 +32,8 @@
   },
   "dependencies": {
     "bigi": "^1.1.0",
-    "ecurve": "^1.0.0",
-    "coinstring": "^2.0.0"
+    "coinstring": "^2.0.0",
+    "ecurve": "^1.0.0"
   },
   "scripts": {
     "browser-test": "mochify --wd -R spec",
