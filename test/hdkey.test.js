@@ -119,7 +119,6 @@ describe('hdkey', function () {
 
       var expected = 'xpub6JdKdVJtdx6sC3nh87pDvnGhotXuU5Kz6Qy7Piy84vUAwWSYShsUGULE8u6gCivTHgz7cCKJHiXaaMeieB4YnoFVAsNgHHKXJ2mN6jCMbH1'
       assert.equal(derivedHDKey.publicExtendedKey, expected)
-
     })
   })
 
