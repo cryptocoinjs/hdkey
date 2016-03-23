@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/cryptocoinjs/hdkey",
   "devDependencies": {
+    "bigi": "^1.1.0",
     "coveralls": "^2.10.0",
+    "ecurve": "^1.0.0",
     "istanbul": "^0.3.17",
     "mocha": "^2.2.5",
     "mocha-lcov-reporter": "0.0.1",
@@ -30,9 +32,7 @@
     "standard": "4.x"
   },
   "dependencies": {
-    "bigi": "^1.1.0",
     "coinstring": "^2.0.0",
-    "ecurve": "^1.0.0",
     "secp256k1": "^3.0.1"
   },
   "scripts": {
