@@ -1,12 +1,35 @@
+sudo: false
+os:
+  - linux
 language: node_js
 node_js:
+  - "0.10"
+  - "0.11"
   - "0.12"
   - "4"
   - "5"
-matrix:
-  include:
-    - node_js: "4"
-      env: TEST_SUITE=lint
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - clang-3.5
+      - g++-4.8
+before_install:
+  - sh -e /etc/init.d/xvfb start
 env:
-  - TEST_SUITE=unit
-script: npm run-script $TEST_SUITE
+  global:
+    - DISPLAY=:99.0
+    - RANDOM_TESTS_REPEAT=100
+  matrix:
+    - CXX=g++-4.8 TEST_SUITE=unit
+matrix:
+  fast_finish: true
+  include:
+    - os: linux
+      node_js: "4"
+      env: CXX=g++-4.8 TEST_SUITE=lint
+    - os: linux
+      node_js: "4"
+      env: CXX=clang++ TEST_SUITE=unit
+script: npm run $TEST_SUITE
