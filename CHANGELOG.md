@@ -1,3 +1,7 @@
+0.7.0 / 2016-03-22
+------------------
+- upgrade from `ecurve` to `secp256k1`. [#5][#5]
+
 0.6.0 / 2015-07-02
 ------------------
 - **breaking** (same day though, haha). Changed `publicExtendedKey`/`privateExtendedKey` in `JSON` methods to `xpub`/`xpriv`
@@ -46,3 +50,14 @@
 0.0.1 / 2014-05-29
 ------------------
 - initial release
+
+<!--- hdkey: use the secp256k1 package for crypto -->
+[#5]: https://github.com/cryptocoinjs/hdkey/pull/5
+<!--- Is this library still maintained? -->
+[#4]: https://github.com/cryptocoinjs/hdkey/issues/4
+<!--- Update hdkey.js -->
+[#3]: https://github.com/cryptocoinjs/hdkey/pull/3
+<!--- Update hdkey.js -->
+[#2]: https://github.com/cryptocoinjs/hdkey/pull/2
+<!--- rare condition needed for bip consistency -->
+[#1]: https://github.com/cryptocoinjs/hdkey/issues/1
