@@ -1,14 +1,12 @@
 hdkey
 =====
 
-[![build status](https://secure.travis-ci.org/cryptocoinjs/hdkey.png)](http://travis-ci.org/cryptocoinjs/hdkey)
-[![Coverage Status](https://img.shields.io/coveralls/cryptocoinjs/hdkey.svg)](https://coveralls.io/r/cryptocoinjs/hdkey)
+[![NPM Package](https://img.shields.io/npm/v/hdkey.svg?style=flat-square)](https://www.npmjs.org/package/hdkey)
+[![build status](https://secure.travis-ci.org/cryptocoinjs/hdkey.svg)](http://travis-ci.org/cryptocoinjs/hdkey)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 A JavaScript component for [BIP32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)(hierarchical deterministic keys).
 
-Thanks to the active BitcoinJS team and their hard work - some code borrowed from it.
-
-**Note: Will be deprecating and replacing with** https://github.com/bitcoinjs/bip32
 
 Installation
 ------------
@@ -32,7 +30,6 @@ console.log(mk.publicExtendedKey)
 ```
 
 
-
 References
 ----------
 - https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/src/hdnode.js
@@ -40,3 +37,9 @@ References
 - http://blog.richardkiss.com/?p=313
 - https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
 - http://bitcoinmagazine.com/8396/deterministic-wallets-advantages-flaw/
+
+
+License
+-------
+
+MIT
