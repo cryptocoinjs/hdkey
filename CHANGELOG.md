@@ -10,7 +10,7 @@
 0.5.0 / 2015-07-02
 ------------------
 - JavaScript Standard Style
-- fix rare condition for BIP32 consistency: https://github.com/cryptocoinjs/hdkey/issues/1
+- fix rare condition for BIP32 consistency: [#1][#1]
 - added `toJSON()/fromJSON()`
 
 0.4.0 / 2014-09-24
@@ -51,13 +51,11 @@
 ------------------
 - initial release
 
-<!--- hdkey: use the secp256k1 package for crypto -->
-[#5]: https://github.com/cryptocoinjs/hdkey/pull/5
-<!--- Is this library still maintained? -->
-[#4]: https://github.com/cryptocoinjs/hdkey/issues/4
-<!--- Update hdkey.js -->
-[#3]: https://github.com/cryptocoinjs/hdkey/pull/3
-<!--- Update hdkey.js -->
-[#2]: https://github.com/cryptocoinjs/hdkey/pull/2
-<!--- rare condition needed for bip consistency -->
-[#1]: https://github.com/cryptocoinjs/hdkey/issues/1
+<!-- generated using jprichardson/issue-links -->
+[#7]: https://github.com/cryptocoinjs/hdkey/issues/7    "privateExtendedKey error handling"
+[#6]: https://github.com/cryptocoinjs/hdkey/pull/6      "hdkey: use bippath for BIP32 path parsing and validation"
+[#5]: https://github.com/cryptocoinjs/hdkey/pull/5      "hdkey: use the secp256k1 package for crypto"
+[#4]: https://github.com/cryptocoinjs/hdkey/issues/4    "Is this library still maintained?"
+[#3]: https://github.com/cryptocoinjs/hdkey/pull/3      "Update hdkey.js"
+[#2]: https://github.com/cryptocoinjs/hdkey/pull/2      "Update hdkey.js"
+[#1]: https://github.com/cryptocoinjs/hdkey/issues/1    "rare condition needed for bip consistency"
