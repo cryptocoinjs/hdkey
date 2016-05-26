@@ -139,4 +139,20 @@ describe('hdkey', function () {
       assert(HDKey.HARDENED_OFFSET)
     })
   })
+
+  describe('> when private key is null', function () {
+    it('privateExtendedKey should return null and not throw', function () {
+      var seed = '000102030405060708090a0b0c0d0e0f'
+      var masterKey = HDKey.fromMasterSeed(new Buffer(seed, 'hex'))
+
+      assert.ok(masterKey.privateExtendedKey, 'xpriv is truthy')
+      masterKey._privateKey = null
+
+      assert.doesNotThrow(function () {
+        masterKey.privateExtendedKey
+      })
+
+      assert.ok(!masterKey.privateExtendedKey, 'xpriv is falsy')
+    })
+  })
 })
