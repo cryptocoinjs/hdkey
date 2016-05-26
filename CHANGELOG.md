@@ -1,3 +1,7 @@
+0.7.1 / 2016-05-26
+------------------
+- fix bug when `privateKey` is `null`, `privateExtendedKey` should not throw, and return `null` [#7][#7]
+
 0.7.0 / 2016-03-22
 ------------------
 - upgrade from `ecurve` to `secp256k1`. [#5][#5]
