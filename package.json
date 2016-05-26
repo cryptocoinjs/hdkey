@@ -30,7 +30,7 @@
     "mocha-lcov-reporter": "0.0.1",
     "mochify": "^2.10.0",
     "secure-random": "^1.0.0",
-    "standard": "6.x"
+    "standard": "^7.1.1"
   },
   "dependencies": {
     "coinstring": "^2.0.0",
