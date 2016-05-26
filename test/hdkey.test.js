@@ -6,6 +6,7 @@ var curve = ecurve.getCurveByName('secp256k1')
 var HDKey = require('../')
 var fixtures = require('./fixtures/hdkey')
 
+// trinity: mocha
 /* global describe it */
 
 describe('hdkey', function () {
