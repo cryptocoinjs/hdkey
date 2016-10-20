@@ -18,6 +18,9 @@ describe('hdkey', function () {
 
         assert.equal(childkey.privateExtendedKey, f.private)
         assert.equal(childkey.publicExtendedKey, f.public)
+
+        assert.equal(childkey.publicExtendedKeyBuffer.toString('hex'), f.publicHex)
+        assert.equal(childkey.privateExtendedKeyBuffer.toString('hex'), f.privateHex)
       })
 
       describe('> ' + f.path + ' toJSON() / fromJSON()', function () {
@@ -71,6 +74,41 @@ describe('hdkey', function () {
       assert.equal(pub.length, 65)
       var hdkey = new HDKey()
       hdkey.publicKey = pub
+    })
+  })
+
+  describe('+ fromExtendedKeyBuffer()', function () {
+    describe('> when private', function () {
+      it('should parse it', function () {
+        // m/0/2147483647'/1/2147483646'/2
+        var key = 'BIit5AUxpQe4AAAAApRStUm+jOo+y3qEvsENz9lK/k0Snr/Ts8tY7t85TtJxALt9Ob24Ps9Y8v2CttkYNBy+9ChmHvAauXwopIQhJawj'
+        var hdkey = HDKey.fromExtendedKeyBuffer(new Buffer(key, 'base64'))
+        assert.equal(hdkey.versions.private, 0x0488ade4)
+        assert.equal(hdkey.versions.public, 0x0488b21e)
+        assert.equal(hdkey.depth, 5)
+        assert.equal(hdkey.parentFingerprint, 0x31a507b8)
+        assert.equal(hdkey.index, 2)
+        assert.equal(hdkey.chainCode.toString('hex'), '9452b549be8cea3ecb7a84bec10dcfd94afe4d129ebfd3b3cb58eedf394ed271')
+        assert.equal(hdkey.privateKey.toString('hex'), 'bb7d39bdb83ecf58f2fd82b6d918341cbef428661ef01ab97c28a4842125ac23')
+        assert.equal(hdkey.publicKey.toString('hex'), '024d902e1a2fc7a8755ab5b694c575fce742c48d9ff192e63df5193e4c7afe1f9c')
+        assert.equal(hdkey.identifier.toString('hex'), '26132fdbe7bf89cbc64cf8dafa3f9f88b8666220')
+      })
+    })
+    describe('> when public', function () {
+      it('should parse it', function () {
+        // m/0/2147483647'/1/2147483646'/2
+        var key = 'BIiyHgUxpQe4AAAAApRStUm+jOo+y3qEvsENz9lK/k0Snr/Ts8tY7t85TtJxAk2QLhovx6h1WrW2lMV1/OdCxI2f8ZLmPfUZPkx6/h+c'
+        var hdkey = HDKey.fromExtendedKeyBuffer(new Buffer(key, 'base64'))
+        assert.equal(hdkey.versions.private, 0x0488ade4)
+        assert.equal(hdkey.versions.public, 0x0488b21e)
+        assert.equal(hdkey.depth, 5)
+        assert.equal(hdkey.parentFingerprint, 0x31a507b8)
+        assert.equal(hdkey.index, 2)
+        assert.equal(hdkey.chainCode.toString('hex'), '9452b549be8cea3ecb7a84bec10dcfd94afe4d129ebfd3b3cb58eedf394ed271')
+        assert.equal(hdkey.privateKey, null)
+        assert.equal(hdkey.publicKey.toString('hex'), '024d902e1a2fc7a8755ab5b694c575fce742c48d9ff192e63df5193e4c7afe1f9c')
+        assert.equal(hdkey.identifier.toString('hex'), '26132fdbe7bf89cbc64cf8dafa3f9f88b8666220')
+      })
     })
   })
 
