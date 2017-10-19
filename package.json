@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "coinstring": "^2.0.0",
+    "safe-buffer": "^5.1.1",
     "secp256k1": "^3.0.1"
   },
   "scripts": {
