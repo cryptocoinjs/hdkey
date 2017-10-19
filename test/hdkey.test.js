@@ -1,5 +1,6 @@
 var assert = require('assert')
 var BigInteger = require('bigi')
+var Buffer = require('safe-buffer').Buffer
 var ecurve = require('ecurve')
 var secureRandom = require('secure-random')
 var curve = ecurve.getCurveByName('secp256k1')
@@ -13,7 +14,7 @@ describe('hdkey', function () {
   describe('+ fromMasterSeed', function () {
     fixtures.valid.forEach(function (f) {
       it('should properly derive the chain path: ' + f.path, function () {
-        var hdkey = HDKey.fromMasterSeed(new Buffer(f.seed, 'hex'))
+        var hdkey = HDKey.fromMasterSeed(Buffer.from(f.seed, 'hex'))
         var childkey = hdkey.derive(f.path)
 
         assert.equal(childkey.privateExtendedKey, f.private)
@@ -22,7 +23,7 @@ describe('hdkey', function () {
 
       describe('> ' + f.path + ' toJSON() / fromJSON()', function () {
         it('should return an object read for JSON serialization', function () {
-          var hdkey = HDKey.fromMasterSeed(new Buffer(f.seed, 'hex'))
+          var hdkey = HDKey.fromMasterSeed(Buffer.from(f.seed, 'hex'))
           var childkey = hdkey.derive(f.path)
 
           var obj = {
@@ -44,7 +45,7 @@ describe('hdkey', function () {
     it('should throw an error if incorrect key size', function () {
       var hdkey = new HDKey()
       assert.throws(function () {
-        hdkey.privateKey = new Buffer([1, 2, 3, 4])
+        hdkey.privateKey = Buffer.from([1, 2, 3, 4])
       }, /key must be 32/)
     })
   })
@@ -53,7 +54,7 @@ describe('hdkey', function () {
     it('should throw an error if incorrect key size', function () {
       assert.throws(function () {
         var hdkey = new HDKey()
-        hdkey.publicKey = new Buffer([1, 2, 3, 4])
+        hdkey.publicKey = Buffer.from([1, 2, 3, 4])
       }, /key must be 33 or 65/)
     })
 
@@ -126,7 +127,7 @@ describe('hdkey', function () {
   describe('> when private key integer is less than 32 bytes', function () {
     it('should work', function () {
       var seed = '000102030405060708090a0b0c0d0e0f'
-      var masterKey = HDKey.fromMasterSeed(new Buffer(seed, 'hex'))
+      var masterKey = HDKey.fromMasterSeed(Buffer.from(seed, 'hex'))
 
       var newKey = masterKey.derive("m/44'/6'/4'")
       var expected = 'xprv9ymoag6W7cR6KBcJzhCM6qqTrb3rRVVwXKzwNqp1tDWcwierEv3BA9if3ARHMhMPh9u2jNoutcgpUBLMfq3kADDo7LzfoCnhhXMRGX3PXDx'
@@ -153,7 +154,7 @@ describe('hdkey', function () {
   describe('> when private key is null', function () {
     it('privateExtendedKey should return null and not throw', function () {
       var seed = '000102030405060708090a0b0c0d0e0f'
-      var masterKey = HDKey.fromMasterSeed(new Buffer(seed, 'hex'))
+      var masterKey = HDKey.fromMasterSeed(Buffer.from(seed, 'hex'))
 
       assert.ok(masterKey.privateExtendedKey, 'xpriv is truthy')
       masterKey._privateKey = null
