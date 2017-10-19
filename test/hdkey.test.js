@@ -127,6 +127,13 @@ describe('hdkey', function () {
       assert.equal(hdkey.verify(Buffer.alloc(32), Buffer.alloc(64)), false)
       assert.equal(hdkey.verify(ma, b), false)
       assert.equal(hdkey.verify(mb, a), false)
+
+      assert.throws(function () {
+        hdkey.verify(Buffer.alloc(99), a)
+      }, /message length is invalid/)
+      assert.throws(function () {
+        hdkey.verify(ma, Buffer.alloc(99))
+      }, /signature length is invalid/)
     })
   })
 
