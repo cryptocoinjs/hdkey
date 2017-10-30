@@ -111,6 +111,32 @@ describe('hdkey', function () {
     })
   })
 
+  describe('> when signing', function () {
+    it('should work', function () {
+      var key = 'xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j'
+      var hdkey = HDKey.fromExtendedKey(key)
+
+      var ma = Buffer.alloc(32, 0)
+      var mb = Buffer.alloc(32, 8)
+      var a = hdkey.sign(ma)
+      var b = hdkey.sign(mb)
+      assert.equal(a.toString('hex'), '6ba4e554457ce5c1f1d7dbd10459465e39219eb9084ee23270688cbe0d49b52b7905d5beb28492be439a3250e9359e0390f844321b65f1a88ce07960dd85da06')
+      assert.equal(b.toString('hex'), 'dfae85d39b73c9d143403ce472f7c4c8a5032c13d9546030044050e7d39355e47a532e5c0ae2a25392d97f5e55ab1288ef1e08d5c034bad3b0956fbbab73b381')
+      assert.equal(hdkey.verify(ma, a), true)
+      assert.equal(hdkey.verify(mb, b), true)
+      assert.equal(hdkey.verify(Buffer.alloc(32), Buffer.alloc(64)), false)
+      assert.equal(hdkey.verify(ma, b), false)
+      assert.equal(hdkey.verify(mb, a), false)
+
+      assert.throws(function () {
+        hdkey.verify(Buffer.alloc(99), a)
+      }, /message length is invalid/)
+      assert.throws(function () {
+        hdkey.verify(ma, Buffer.alloc(99))
+      }, /signature length is invalid/)
+    })
+  })
+
   describe('> when deriving public key', function () {
     it('should work', function () {
       var key = 'xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EGMcet8'
