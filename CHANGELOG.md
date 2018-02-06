@@ -1,3 +1,8 @@
+0.8.0 / 2018-02-06
+------------------
+- add `sign()` and `verify()`
+- upgrade to `safe-buffer`
+
 0.7.1 / 2016-05-26
 ------------------
 - fix bug when `privateKey` is `null`, `privateExtendedKey` should not throw, and return `null` [#7][#7]
