@@ -192,4 +192,23 @@ describe('hdkey', function () {
       assert.ok(!masterKey.privateExtendedKey, 'xpriv is falsy')
     })
   })
+
+  describe(' - when the path given to derive contains only the master extended key', function () {
+    const hdKeyInstance = HDKey.fromMasterSeed(Buffer.from(fixtures.valid[0].seed, 'hex'))
+
+    it('should return the same hdkey instance', function () {
+      assert.equal(hdKeyInstance.derive('m'), hdKeyInstance)
+      assert.equal(hdKeyInstance.derive('M'), hdKeyInstance)
+      assert.equal(hdKeyInstance.derive("m'"), hdKeyInstance)
+      assert.equal(hdKeyInstance.derive("M'"), hdKeyInstance)
+    })
+  })
+
+  describe(' - when the path given to derive does not begin with master extended key', function () {
+    it('should throw an error', function () {
+      assert.throws(function () {
+        HDKey.prototype.derive('123')
+      }, /Path must start with "m" or "M"/)
+    })
+  })
 })
