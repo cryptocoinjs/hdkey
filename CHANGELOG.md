@@ -1,3 +1,9 @@
+1.0.0 / 2018-05-24
+------------------
+
+- drop support for all Node.js versions 4 and earlier
+- fix `derive()` path validation ([#20](https://github.com/cryptocoinjs/hdkey/pull/20))
+
 0.8.0 / 2018-02-06
 ------------------
 - add `sign()` and `verify()`
