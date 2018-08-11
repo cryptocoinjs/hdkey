@@ -211,4 +211,46 @@ describe('hdkey', function () {
       }, /Path must start with "m" or "M"/)
     })
   })
+
+  describe('- after wipePrivateData()', function () {
+    it('should not have private data', function () {
+      const hdkey = HDKey.fromMasterSeed(Buffer.from(fixtures.valid[6].seed, 'hex')).wipePrivateData()
+      assert.equal(hdkey.privateKey, null)
+      assert.equal(hdkey.privateExtendedKey, null)
+      assert.throws(() => hdkey.sign(Buffer.alloc(32)), "shouldn't be able to sign")
+      const childKey = hdkey.derive('m/0')
+      assert.equal(childKey.publicExtendedKey, fixtures.valid[7].public)
+      assert.equal(childKey.privateKey, null)
+      assert.equal(childKey.privateExtendedKey, null)
+    })
+
+    it('should have correct data', function () {
+      // m/0/2147483647'/1/2147483646'/2
+      const key = 'xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j'
+      const hdkey = HDKey.fromExtendedKey(key).wipePrivateData()
+      assert.equal(hdkey.versions.private, 0x0488ade4)
+      assert.equal(hdkey.versions.public, 0x0488b21e)
+      assert.equal(hdkey.depth, 5)
+      assert.equal(hdkey.parentFingerprint, 0x31a507b8)
+      assert.equal(hdkey.index, 2)
+      assert.equal(hdkey.chainCode.toString('hex'), '9452b549be8cea3ecb7a84bec10dcfd94afe4d129ebfd3b3cb58eedf394ed271')
+      assert.equal(hdkey.publicKey.toString('hex'), '024d902e1a2fc7a8755ab5b694c575fce742c48d9ff192e63df5193e4c7afe1f9c')
+      assert.equal(hdkey.identifier.toString('hex'), '26132fdbe7bf89cbc64cf8dafa3f9f88b8666220')
+    })
+
+    it('should be able to verify signatures', function () {
+      const fullKey = HDKey.fromMasterSeed(fixtures.valid[0].seed)
+      // using JSON methods to clone before mutating
+      const wipedKey = HDKey.fromJSON(fullKey.toJSON()).wipePrivateData()
+
+      const hash = Buffer.alloc(32, 8)
+      assert.ok(wipedKey.verify(hash, fullKey.sign(hash)))
+    })
+
+    it('should not throw if called on hdkey without private data', function () {
+      const hdkey = HDKey.fromExtendedKey(fixtures.valid[0].public)
+      assert.doesNotThrow(() => hdkey.wipePrivateData())
+      assert.equal(hdkey.publicExtendedKey, fixtures.valid[0].public)
+    })
+  })
 })
