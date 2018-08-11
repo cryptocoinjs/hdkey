@@ -84,6 +84,10 @@ Signs the buffer `hash` with the private key using `secp256k1` and returns the s
 
 Verifies that the `signature` is valid for `hash` and the `hdkey`'s public key using `secp256k1`. Returns `true` for valid, `false` for invalid. Throws if the `hash` or `signature` is the wrong length.
 
+### `hdkey.wipePrivateData()`
+
+Wipes all record of the private key from the `hdkey` instance. After calling this method, the instance will behave as if it was created via `HDKey.fromExtendedKey(xpub)`.
+
 ### `hdkey.toJSON()`
 
 Serializes the `hdkey` to an object that can be `JSON.stringify()`ed.
