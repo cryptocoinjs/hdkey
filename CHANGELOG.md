@@ -1,3 +1,9 @@
+1.1.0 / 2018-08-14
+------------------
+
+- Add `wipePrivateData()` method ([#22](https://github.com/cryptocoinjs/hdkey/pull/22))
+- Add missing LICENSE file ([#21](https://github.com/cryptocoinjs/hdkey/pull/21))
+
 1.0.0 / 2018-05-24
 ------------------
 
