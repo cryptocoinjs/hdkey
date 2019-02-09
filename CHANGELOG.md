@@ -1,3 +1,8 @@
+1.1.1 / 2019-02-09
+------------------
+
+- Fix Electron v4 support. No changes to external API. ([#26](https://github.com/cryptocoinjs/hdkey/pull/26))
+
 1.1.0 / 2018-08-14
 ------------------
 
