@@ -33,7 +33,7 @@
     "standard": "^7.1.1"
   },
   "dependencies": {
-    "coinstring": "^2.0.0",
+    "b58": "^4.0.3",
     "safe-buffer": "^5.1.1",
     "secp256k1": "^3.0.1"
   },
