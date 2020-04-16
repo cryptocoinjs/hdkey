@@ -1,3 +1,10 @@
+1.1.2 / 2020-04-16
+------------------
+
+- Fix extremely rare types bug ([#33](https://github.com/cryptocoinjs/hdkey/pull/33))
+- Use `bs58check` dependency instead of `coinstring` ([#30](https://github.com/cryptocoinjs/hdkey/pull/30))
+- Don't publish test files ([#27](https://github.com/cryptocoinjs/hdkey/issues/27), [#34](https://github.com/cryptocoinjs/hdkey/pull/34))
+
 1.1.1 / 2019-02-09
 ------------------
 
