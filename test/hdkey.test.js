@@ -130,10 +130,10 @@ describe('hdkey', function () {
 
       assert.throws(function () {
         hdkey.verify(Buffer.alloc(99), a)
-      }, /message length is invalid/)
+      }, /message.*length/)
       assert.throws(function () {
         hdkey.verify(ma, Buffer.alloc(99))
-      }, /signature length is invalid/)
+      }, /signature.*length/)
     })
   })
 
