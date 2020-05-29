@@ -253,4 +253,44 @@ describe('hdkey', function () {
       assert.equal(hdkey.publicExtendedKey, fixtures.valid[0].public)
     })
   })
+
+  describe('Deriving a child key does not mutate the internal state', function () {
+    it('should not mutate it when deriving with a private key', function () {
+      const hdkey = HDKey.fromExtendedKey(fixtures.valid[0].private)
+      const path = 'm/123'
+      const privateKeyBefore = hdkey.privateKey.toString('hex')
+
+      const child = hdkey.derive(path)
+      assert.equal(hdkey.privateKey.toString('hex'), privateKeyBefore)
+
+      const child2 = hdkey.derive(path)
+      assert.equal(hdkey.privateKey.toString('hex'), privateKeyBefore)
+
+      const child3 = hdkey.derive(path)
+      assert.equal(hdkey.privateKey.toString('hex'), privateKeyBefore)
+
+      assert.equal(child.privateKey.toString('hex'), child2.privateKey.toString('hex'))
+      assert.equal(child2.privateKey.toString('hex'), child3.privateKey.toString('hex'))
+    })
+
+    it('should not mutate it when deriving without a private key', function () {
+      const hdkey = HDKey.fromExtendedKey(fixtures.valid[0].private)
+      const path = 'm/123/123/123'
+      hdkey.wipePrivateData()
+
+      const publicKeyBefore = hdkey.publicKey.toString('hex')
+
+      const child = hdkey.derive(path)
+      assert.equal(hdkey.publicKey.toString('hex'), publicKeyBefore)
+
+      const child2 = hdkey.derive(path)
+      assert.equal(hdkey.publicKey.toString('hex'), publicKeyBefore)
+
+      const child3 = hdkey.derive(path)
+      assert.equal(hdkey.publicKey.toString('hex'), publicKeyBefore)
+
+      assert.equal(child.publicKey.toString('hex'), child2.publicKey.toString('hex'))
+      assert.equal(child2.publicKey.toString('hex'), child3.publicKey.toString('hex'))
+    })
+  })
 })
