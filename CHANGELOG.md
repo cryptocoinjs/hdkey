@@ -1,3 +1,9 @@
+2.0.0 / 2020-05-29
+------------------
+
+- **BREAKING:** Require Node.js v10+ ([#38](https://github.com/cryptocoinjs/hdkey/pull/38))
+- Upgrade `secp256k1` dependency; to use N-API ([#32](https://github.com/cryptocoinjs/hdkey/pull/32))
+
 1.1.2 / 2020-04-16
 ------------------
 
