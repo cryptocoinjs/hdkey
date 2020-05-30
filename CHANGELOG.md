@@ -1,3 +1,8 @@
+2.0.1 / 2020-05-30
+------------------
+
+- Bugfix: prevent mutating buffers passed in ([#39](https://github.com/cryptocoinjs/hdkey/pull/39))
+
 2.0.0 / 2020-05-29
 ------------------
 
