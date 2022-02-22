@@ -93,7 +93,7 @@ var addr = Base58Check.encode(childkey.pubKeyHash, prefix = '00');
 var compressed = '01';
 var wif = Base58Check.encode(
   childkey.privateKey.toString('hex') + compressed,
-  prefix = '00',
+  prefix = '80',
 );
 ```
 
