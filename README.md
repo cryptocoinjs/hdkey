@@ -11,7 +11,9 @@ A JavaScript component for [BIP32](https://github.com/bitcoin/bips/blob/master/b
 Installation
 ------------
 
-    npm i --save hdkey
+```bash
+npm i --save hdkey
+```
 
 
 Usage
@@ -74,6 +76,13 @@ console.log(childkey.privateExtendedKey)
 // -> "xprv9zFnWC6h2cLgpmSA46vutJzBcfJ8yaJGg8cX1e5StJh45BBciYTRXSd25UEPVuesF9yog62tGAQtHjXajPPdbRCHuWS6T8XA2ECKADdw4Ef"
 console.log(childkey.publicExtendedKey)
 // -> "xpub6DF8uhdarytz3FWdA8TvFSvvAh8dP3283MY7p2V4SeE2wyWmG5mg5EwVvmdMVCQcoNJxGoWaU9DCWh89LojfZ537wTfunKau47EL2dhHKon"
+```
+
+Newer, "hardened" derivation paths look like this:
+
+```js
+// as defined by BIP-44
+var childkey = hdkey.derive("m/44'/0'/0'/0/0");
 ```
 
 ### `hdkey.sign(hash)`
