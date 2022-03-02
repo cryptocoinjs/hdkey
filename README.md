@@ -11,7 +11,9 @@ A JavaScript component for [BIP32](https://github.com/bitcoin/bips/blob/master/b
 Installation
 ------------
 
-    npm i --save hdkey
+```bash
+npm i --save hdkey
+```
 
 
 Usage
@@ -80,21 +82,7 @@ Newer, "hardened" derivation paths look like this:
 
 ```js
 // as defined by BIP-44
-var childkey = hdkey.derive("m/44'/0'/0'/0'/0/0");
-```
-
-To convert to Base58Check and WIF addresses:
-
-```js
-var Base58check = require('base58check');
-
-var addr = Base58Check.encode(childkey.pubKeyHash, prefix = '00');
-
-var compressed = '01';
-var wif = Base58Check.encode(
-  childkey.privateKey.toString('hex') + compressed,
-  prefix = '80',
-);
+var childkey = hdkey.derive("m/44'/0'/0'/0/0");
 ```
 
 ### `hdkey.sign(hash)`
