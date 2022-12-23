@@ -41,7 +41,7 @@ var seed = 'a0c42a9c3ac6abf2ba6a9946ae83af18f51bf1c9fa7dacc4c92513cc4dd015834341
 var hdkey = HDKey.fromMasterSeed(Buffer.from(seed, 'hex'))
 ```
 
-### `HDKey.fromExtendedKey(extendedKey[, versions])`
+### `HDKey.fromExtendedKey(extendedKey[, versions, skipVerification])`
 
 Creates an `hdkey` object from a `xprv` or `xpub` extended key string. Accepts an optional `versions` object.
 
