@@ -35,6 +35,9 @@
   },
   "dependencies": {
     "bs58check": "^2.1.2",
+    "create-hmac": "^1.1.7",
+    "hash.js": "^1.1.7",
+    "randombytes": "^2.1.0",
     "safe-buffer": "^5.1.1",
     "secp256k1": "^4.0.0"
   },
