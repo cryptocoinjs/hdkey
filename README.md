@@ -43,7 +43,7 @@ var hdkey = HDKey.fromMasterSeed(Buffer.from(seed, 'hex'))
 
 ### `HDKey.fromExtendedKey(extendedKey[, versions, skipVerification])`
 
-Creates an `hdkey` object from a `xprv` or `xpub` extended key string. Accepts an optional `versions` object.
+Creates an `hdkey` object from a `xprv` or `xpub` extended key string. Accepts an optional `versions` object & an optional `skipVerification` boolean. If `skipVerification` is set to true, then the provided public key's x (and y if uncompressed) coordinate will not will be verified to be on the curve.
 
 ```js
 var key = 'xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j'
