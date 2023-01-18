@@ -108,6 +108,21 @@ describe('hdkey', function () {
         assert.equal(hdkey.publicKey.toString('hex'), '024d902e1a2fc7a8755ab5b694c575fce742c48d9ff192e63df5193e4c7afe1f9c')
         assert.equal(hdkey.identifier.toString('hex'), '26132fdbe7bf89cbc64cf8dafa3f9f88b8666220')
       })
+
+      it('should parse it without verification', function () {
+        // m/0/2147483647'/1/2147483646'/2
+        var key = 'xpub6FnCn6nSzZAw5Tw7cgR9bi15UV96gLZhjDstkXXxvCLsUXBGXPdSnLFbdpq8p9HmGsApME5hQTZ3emM2rnY5agb9rXpVGyy3bdW6EEgAtqt'
+        var hdkey = HDKey.fromExtendedKey(key, null, false)
+        assert.equal(hdkey.versions.private, 0x0488ade4)
+        assert.equal(hdkey.versions.public, 0x0488b21e)
+        assert.equal(hdkey.depth, 5)
+        assert.equal(hdkey.parentFingerprint, 0x31a507b8)
+        assert.equal(hdkey.index, 2)
+        assert.equal(hdkey.chainCode.toString('hex'), '9452b549be8cea3ecb7a84bec10dcfd94afe4d129ebfd3b3cb58eedf394ed271')
+        assert.equal(hdkey.privateKey, null)
+        assert.equal(hdkey.publicKey.toString('hex'), '024d902e1a2fc7a8755ab5b694c575fce742c48d9ff192e63df5193e4c7afe1f9c')
+        assert.equal(hdkey.identifier.toString('hex'), '26132fdbe7bf89cbc64cf8dafa3f9f88b8666220')
+      })
     })
   })
 
