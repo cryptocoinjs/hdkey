@@ -1,3 +1,11 @@
+2.1.0 / 2023-01-18
+------------------
+
+- Add `skipVerification` option to `HDKey.fromExtendedKey()` to allow skipping verification logic for performance ([#53](https://github.com/cryptocoinjs/hdkey/pull/53))
+- Use `ripemd160` package; as Node v18+ `crypto.createHash()` does not support ripemd160 ([#51](https://github.com/cryptocoinjs/hdkey/pull/51))
+- Fix `.sign()` method in some environments with polyfilled `Buffer` implementations ([#50](https://github.com/cryptocoinjs/hdkey/pull/50))
+- Performance improvements ([#52](https://github.com/cryptocoinjs/hdkey/pull/52))
+
 2.0.1 / 2020-05-30
 ------------------
 
