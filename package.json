@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "bs58check": "^2.1.2",
+    "ripemd160": "^2.0.2",
     "safe-buffer": "^5.1.1",
     "secp256k1": "^4.0.0"
   },
