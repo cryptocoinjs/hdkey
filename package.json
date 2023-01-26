@@ -30,8 +30,7 @@
     "mocha": "^6.1.4",
     "mocha-lcov-reporter": "0.0.1",
     "mochify": "^6.3.0",
-    "secure-random": "^1.0.0",
-    "standard": "^7.1.1"
+    "secure-random": "^1.0.0"
   },
   "dependencies": {
     "bs58check": "^2.1.2",
@@ -40,11 +39,13 @@
     "secp256k1": "^4.0.0"
   },
   "scripts": {
-    "lint": "standard",
+    "lint": "npx -p typescript@4.x -- tsc -p ./jsconfig.json",
     "browser-test": "mochify --wd -R spec",
-    "test": "standard && mocha",
+    "test": "mocha",
     "unit": "mocha",
     "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --reporter list test/*.js",
-    "coveralls": "npm run-script coverage && node ./node_modules/.bin/coveralls < coverage/lcov.info"
+    "coveralls": "npm run-script coverage && node ./node_modules/.bin/coveralls < coverage/lcov.info",
+    "bump": "npm version -m \"chore(release): bump to v%s\"",
+    "fmt": "npx -p prettier@2.x -- prettier -w '**/*.{js,md}'"
   }
 }
