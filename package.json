@@ -29,13 +29,11 @@
     "istanbul": "^0.4.5",
     "mocha": "^6.1.4",
     "mocha-lcov-reporter": "0.0.1",
-    "mochify": "^6.3.0",
-    "secure-random": "^1.0.0"
+    "mochify": "^6.3.0"
   },
   "dependencies": {
     "bs58check": "^2.1.2",
     "ripemd160": "^2.0.2",
-    "safe-buffer": "^5.1.1",
     "secp256k1": "^4.0.0"
   },
   "scripts": {

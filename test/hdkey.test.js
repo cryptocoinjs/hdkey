@@ -1,8 +1,7 @@
 var assert = require("assert");
 var BigInteger = require("bigi");
-var Buffer = require("safe-buffer").Buffer;
+var crypto = require("crypto");
 var ecurve = require("ecurve");
-var secureRandom = require("secure-random");
 var curve = ecurve.getCurveByName("secp256k1");
 var HDKey = require("../");
 var fixtures = require("./fixtures/hdkey");
@@ -59,7 +58,7 @@ describe("hdkey", function () {
     });
 
     it("should not throw if key is 33 bytes (compressed)", function () {
-      var priv = secureRandom.randomBuffer(32);
+      var priv = crypto.randomBytes(32);
       var pub = curve.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(true);
       assert.equal(pub.length, 33);
       var hdkey = new HDKey();
@@ -67,7 +66,7 @@ describe("hdkey", function () {
     });
 
     it("should not throw if key is 65 bytes (not compressed)", function () {
-      var priv = secureRandom.randomBuffer(32);
+      var priv = crypto.randomBytes(32);
       var pub = curve.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(false);
       assert.equal(pub.length, 65);
       var hdkey = new HDKey();
