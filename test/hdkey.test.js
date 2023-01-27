@@ -1,3 +1,5 @@
+"use strict";
+
 var assert = require("assert");
 var BigInteger = require("bigi");
 var crypto = require("crypto");
@@ -13,7 +15,7 @@ describe("hdkey", function () {
   describe("+ fromMasterSeed", function () {
     fixtures.valid.forEach(function (f) {
       it("should properly derive the chain path: " + f.path, function () {
-        var hdkey = HDKey.fromMasterSeed(Buffer.from(f.seed, "hex"));
+        var hdkey = HDKey.fromMasterSeed(hexToU8(f.seed));
         var childkey = hdkey.derive(f.path);
 
         assert.equal(childkey.getPrivateExtendedKey(), f.private);
@@ -22,7 +24,7 @@ describe("hdkey", function () {
 
       describe("> " + f.path + " toJSON() / fromJSON()", function () {
         it("should return an object read for JSON serialization", function () {
-          var hdkey = HDKey.fromMasterSeed(Buffer.from(f.seed, "hex"));
+          var hdkey = HDKey.fromMasterSeed(hexToU8(f.seed));
           var childkey = hdkey.derive(f.path);
 
           var obj = {
@@ -44,7 +46,7 @@ describe("hdkey", function () {
     it("should throw an error if incorrect key size", function () {
       var hdkey = HDKey.create();
       assert.throws(function () {
-        hdkey.setPrivateKey(Buffer.from([1, 2, 3, 4]));
+        hdkey.setPrivateKey(Uint8Array.from([1, 2, 3, 4]));
       }, /key must be 32/);
     });
   });
@@ -53,24 +55,28 @@ describe("hdkey", function () {
     it("should throw an error if incorrect key size", function () {
       assert.throws(function () {
         var hdkey = HDKey.create();
-        hdkey.setPublicKey(Buffer.from([1, 2, 3, 4]));
+        hdkey.setPublicKey(Uint8Array.from([1, 2, 3, 4]));
       }, /key must be 33 or 65/);
     });
 
     it("should not throw if key is 33 bytes (compressed)", function () {
-      var priv = crypto.randomBytes(32);
+      var rnd = crypto.randomBytes(32);
+      var priv = new Uint8Array(rnd);
+
       var pub = curve.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(true);
       assert.equal(pub.length, 33);
       var hdkey = HDKey.create();
-      hdkey.setPublicKey(pub);
+      hdkey.setPublicKey(new Uint8Array(pub));
     });
 
     it("should not throw if key is 65 bytes (not compressed)", function () {
-      var priv = crypto.randomBytes(32);
+      var rnd = crypto.randomBytes(32);
+      var priv = new Uint8Array(rnd);
+
       var pub = curve.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(false);
       assert.equal(pub.length, 65);
       var hdkey = HDKey.create();
-      hdkey.setPublicKey(pub);
+      hdkey.setPublicKey(new Uint8Array(pub));
     });
   });
 
@@ -87,19 +93,19 @@ describe("hdkey", function () {
         assert.equal(hdkey.parentFingerprint, 0x31a507b8);
         assert.equal(hdkey.index, 2);
         assert.equal(
-          hdkey.chainCode.toString("hex"),
+          u8ToHex(hdkey.chainCode),
           "9452b549be8cea3ecb7a84bec10dcfd94afe4d129ebfd3b3cb58eedf394ed271",
         );
         assert.equal(
-          hdkey.getPrivateKey().toString("hex"),
+          u8ToHex(hdkey.getPrivateKey()),
           "bb7d39bdb83ecf58f2fd82b6d918341cbef428661ef01ab97c28a4842125ac23",
         );
         assert.equal(
-          hdkey.publicKey.toString("hex"),
+          u8ToHex(hdkey.publicKey),
           "024d902e1a2fc7a8755ab5b694c575fce742c48d9ff192e63df5193e4c7afe1f9c",
         );
         assert.equal(
-          hdkey.identifier.toString("hex"),
+          u8ToHex(hdkey.identifier),
           "26132fdbe7bf89cbc64cf8dafa3f9f88b8666220",
         );
       });
@@ -117,16 +123,16 @@ describe("hdkey", function () {
         assert.equal(hdkey.parentFingerprint, 0x31a507b8);
         assert.equal(hdkey.index, 2);
         assert.equal(
-          hdkey.chainCode.toString("hex"),
+          u8ToHex(hdkey.chainCode),
           "9452b549be8cea3ecb7a84bec10dcfd94afe4d129ebfd3b3cb58eedf394ed271",
         );
         assert.equal(hdkey.getPrivateKey(), null);
         assert.equal(
-          hdkey.publicKey.toString("hex"),
+          u8ToHex(hdkey.publicKey),
           "024d902e1a2fc7a8755ab5b694c575fce742c48d9ff192e63df5193e4c7afe1f9c",
         );
         assert.equal(
-          hdkey.identifier.toString("hex"),
+          u8ToHex(hdkey.identifier),
           "26132fdbe7bf89cbc64cf8dafa3f9f88b8666220",
         );
       });
@@ -142,16 +148,16 @@ describe("hdkey", function () {
         assert.equal(hdkey.parentFingerprint, 0x31a507b8);
         assert.equal(hdkey.index, 2);
         assert.equal(
-          hdkey.chainCode.toString("hex"),
+          u8ToHex(hdkey.chainCode),
           "9452b549be8cea3ecb7a84bec10dcfd94afe4d129ebfd3b3cb58eedf394ed271",
         );
         assert.equal(hdkey.getPrivateKey(), null);
         assert.equal(
-          hdkey.publicKey.toString("hex"),
+          u8ToHex(hdkey.publicKey),
           "024d902e1a2fc7a8755ab5b694c575fce742c48d9ff192e63df5193e4c7afe1f9c",
         );
         assert.equal(
-          hdkey.identifier.toString("hex"),
+          u8ToHex(hdkey.identifier),
           "26132fdbe7bf89cbc64cf8dafa3f9f88b8666220",
         );
       });
@@ -164,29 +170,29 @@ describe("hdkey", function () {
         "xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j";
       var hdkey = HDKey.fromExtendedKey(key);
 
-      var ma = Buffer.alloc(32, 0);
-      var mb = Buffer.alloc(32, 8);
+      var ma = new Uint8Array(32);
+      var mb = new Uint8Array(Buffer.alloc(32, 8));
       var a = hdkey.sign(ma);
       var b = hdkey.sign(mb);
       assert.equal(
-        a.toString("hex"),
+        u8ToHex(a),
         "6ba4e554457ce5c1f1d7dbd10459465e39219eb9084ee23270688cbe0d49b52b7905d5beb28492be439a3250e9359e0390f844321b65f1a88ce07960dd85da06",
       );
       assert.equal(
-        b.toString("hex"),
+        u8ToHex(b),
         "dfae85d39b73c9d143403ce472f7c4c8a5032c13d9546030044050e7d39355e47a532e5c0ae2a25392d97f5e55ab1288ef1e08d5c034bad3b0956fbbab73b381",
       );
       assert.equal(hdkey.verify(ma, a), true);
       assert.equal(hdkey.verify(mb, b), true);
-      assert.equal(hdkey.verify(Buffer.alloc(32), Buffer.alloc(64)), false);
+      assert.equal(hdkey.verify(new Uint8Array(32), new Uint8Array(64)), false);
       assert.equal(hdkey.verify(ma, b), false);
       assert.equal(hdkey.verify(mb, a), false);
 
       assert.throws(function () {
-        hdkey.verify(Buffer.alloc(99), a);
+        hdkey.verify(new Uint8Array(99), a);
       }, /message.*length/);
       assert.throws(function () {
-        hdkey.verify(ma, Buffer.alloc(99));
+        hdkey.verify(ma, new Uint8Array(99));
       }, /signature.*length/);
     });
   });
@@ -209,7 +215,7 @@ describe("hdkey", function () {
   describe("> when private key integer is less than 32 bytes", function () {
     it("should work", function () {
       var seed = "000102030405060708090a0b0c0d0e0f";
-      var masterKey = HDKey.fromMasterSeed(Buffer.from(seed, "hex"));
+      var masterKey = HDKey.fromMasterSeed(hexToU8(seed));
 
       var newKey = masterKey.derive("m/44'/6'/4'");
       var expected =
@@ -230,12 +236,12 @@ describe("hdkey", function () {
         "xprv9s21ZrQH143K3ckY9DgU79uMTJkQRLdbCCVDh81SnxTgPzLLGax6uHeBULTtaEtcAvKjXfT7ZWtHzKjTpujMkUd9dDb8msDeAfnJxrgAYhr";
       var hdkey = HDKey.fromExtendedKey(key);
       assert.equal(
-        hdkey.getPrivateKey().toString("hex"),
+        u8ToHex(hdkey.getPrivateKey()),
         "00000055378cf5fafb56c711c674143f9b0ee82ab0ba2924f19b64f5ae7cdbfd",
       );
       var derived = hdkey.derive("m/44'/0'/0'/0/0'");
       assert.equal(
-        derived.getPrivateKey().toString("hex"),
+        u8ToHex(derived.getPrivateKey()),
         "3348069561d2a0fb925e74bf198762acc47dce7db27372257d2d959a9e6f8aeb",
       );
     });
@@ -244,7 +250,7 @@ describe("hdkey", function () {
   describe("> when private key is null", function () {
     it("privateExtendedKey should return null and not throw", function () {
       var seed = "000102030405060708090a0b0c0d0e0f";
-      var masterKey = HDKey.fromMasterSeed(Buffer.from(seed, "hex"));
+      var masterKey = HDKey.fromMasterSeed(hexToU8(seed));
 
       assert.ok(masterKey.getPrivateExtendedKey(), "xpriv is truthy");
       masterKey.wipePrivateData();
@@ -258,9 +264,7 @@ describe("hdkey", function () {
   });
 
   describe(" - when the path given to derive contains only the master extended key", function () {
-    const hdKeyInstance = HDKey.fromMasterSeed(
-      Buffer.from(fixtures.valid[0].seed, "hex"),
-    );
+    const hdKeyInstance = HDKey.fromMasterSeed(hexToU8(fixtures.valid[0].seed));
 
     it("should return the same hdkey instance", function () {
       assert.equal(hdKeyInstance.derive("m"), hdKeyInstance);
@@ -282,12 +286,12 @@ describe("hdkey", function () {
   describe("- after wipePrivateData()", function () {
     it("should not have private data", function () {
       const hdkey = HDKey.fromMasterSeed(
-        Buffer.from(fixtures.valid[6].seed, "hex"),
+        hexToU8(fixtures.valid[6].seed),
       ).wipePrivateData();
       assert.equal(hdkey.getPrivateKey(), null);
       assert.equal(hdkey.getPrivateExtendedKey(), null);
       assert.throws(
-        () => hdkey.sign(Buffer.alloc(32)),
+        () => hdkey.sign(new Uint8Array(32)),
         "shouldn't be able to sign",
       );
       const childKey = hdkey.derive("m/0");
@@ -307,15 +311,15 @@ describe("hdkey", function () {
       assert.equal(hdkey.parentFingerprint, 0x31a507b8);
       assert.equal(hdkey.index, 2);
       assert.equal(
-        hdkey.chainCode.toString("hex"),
+        u8ToHex(hdkey.chainCode),
         "9452b549be8cea3ecb7a84bec10dcfd94afe4d129ebfd3b3cb58eedf394ed271",
       );
       assert.equal(
-        hdkey.publicKey.toString("hex"),
+        u8ToHex(hdkey.publicKey),
         "024d902e1a2fc7a8755ab5b694c575fce742c48d9ff192e63df5193e4c7afe1f9c",
       );
       assert.equal(
-        hdkey.identifier.toString("hex"),
+        u8ToHex(hdkey.identifier),
         "26132fdbe7bf89cbc64cf8dafa3f9f88b8666220",
       );
     });
@@ -325,7 +329,7 @@ describe("hdkey", function () {
       // using JSON methods to clone before mutating
       const wipedKey = HDKey.fromJSON(fullKey.toJSON()).wipePrivateData();
 
-      const hash = Buffer.alloc(32, 8);
+      const hash = new Uint8Array(Buffer.alloc(32, 8));
       assert.ok(wipedKey.verify(hash, fullKey.sign(hash)));
     });
 
@@ -340,16 +344,16 @@ describe("hdkey", function () {
     it("should not mutate it when deriving with a private key", function () {
       const hdkey = HDKey.fromExtendedKey(fixtures.valid[0].private);
       const path = "m/123";
-      const privateKeyBefore = hdkey.getPrivateKey().toString("hex");
+      const privateKeyBefore = u8ToHex(hdkey.getPrivateKey());
 
       const child = hdkey.derive(path);
-      assert.equal(hdkey.getPrivateKey().toString("hex"), privateKeyBefore);
+      assert.equal(u8ToHex(hdkey.getPrivateKey()), privateKeyBefore);
 
       const child2 = hdkey.derive(path);
-      assert.equal(hdkey.getPrivateKey().toString("hex"), privateKeyBefore);
+      assert.equal(u8ToHex(hdkey.getPrivateKey()), privateKeyBefore);
 
       const child3 = hdkey.derive(path);
-      assert.equal(hdkey.getPrivateKey().toString("hex"), privateKeyBefore);
+      assert.equal(u8ToHex(hdkey.getPrivateKey()), privateKeyBefore);
 
       assert.equal(
         child.getPrivateKey().toString("hex"),
@@ -366,16 +370,16 @@ describe("hdkey", function () {
       const path = "m/123/123/123";
       hdkey.wipePrivateData();
 
-      const publicKeyBefore = hdkey.publicKey.toString("hex");
+      const publicKeyBefore = u8ToHex(hdkey.publicKey);
 
       const child = hdkey.derive(path);
-      assert.equal(hdkey.publicKey.toString("hex"), publicKeyBefore);
+      assert.equal(u8ToHex(hdkey.publicKey), publicKeyBefore);
 
       const child2 = hdkey.derive(path);
-      assert.equal(hdkey.publicKey.toString("hex"), publicKeyBefore);
+      assert.equal(u8ToHex(hdkey.publicKey), publicKeyBefore);
 
       const child3 = hdkey.derive(path);
-      assert.equal(hdkey.publicKey.toString("hex"), publicKeyBefore);
+      assert.equal(u8ToHex(hdkey.publicKey), publicKeyBefore);
 
       assert.equal(
         child.publicKey.toString("hex"),
@@ -388,3 +392,46 @@ describe("hdkey", function () {
     });
   });
 });
+
+/**
+ * @param {String} hex
+ * @returns {Uint8Array}
+ */
+function hexToU8(hex) {
+  let bufLen = hex.length / 2;
+  let u8 = new Uint8Array(bufLen);
+
+  let i = 0;
+  let index = 0;
+  let lastIndex = hex.length - 2;
+  for (;;) {
+    if (i > lastIndex) {
+      break;
+    }
+
+    let h = hex.substr(i, 2);
+    let b = parseInt(h, 16);
+    u8[index] = b;
+
+    i += 2;
+    index += 1;
+  }
+
+  return u8;
+}
+
+/**
+ * @param {Uint8Array} u8
+ * @returns {String} hex
+ */
+function u8ToHex(u8) {
+  /** @type {Array<String>} */
+  let hex = [];
+
+  u8.forEach(function (b) {
+    let h = b.toString(16).padStart(2, "0");
+    hex.push(h);
+  });
+
+  return hex.join("");
+}
