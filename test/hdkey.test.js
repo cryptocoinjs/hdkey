@@ -13,80 +13,81 @@ var fixtures = require("./fixtures/hdkey");
 
 describe("hdkey", function () {
   describe("+ fromMasterSeed", function () {
-    fixtures.valid.forEach(function (f) {
-      it("should properly derive the chain path: " + f.path, function () {
-        var hdkey = HDKey.fromMasterSeed(hexToU8(f.seed));
-        var childkey = hdkey.derive(f.path);
+    for (let f of fixtures.valid) {
+      it("should properly derive the chain path: " + f.path, async function () {
+        var hdkey = await HDKey.fromMasterSeed(hexToU8(f.seed));
+        var childkey = await hdkey.derive(f.path);
+        let xpriv = await childkey.getPrivateExtendedKey();
 
-        assert.equal(childkey.getPrivateExtendedKey(), f.private);
-        assert.equal(childkey.getPublicExtendedKey(), f.public);
+        assert.equal(xpriv, f.private);
+        assert.equal(await childkey.getPublicExtendedKey(), f.public);
       });
 
       describe("> " + f.path + " toJSON() / fromJSON()", function () {
-        it("should return an object read for JSON serialization", function () {
-          var hdkey = HDKey.fromMasterSeed(hexToU8(f.seed));
-          var childkey = hdkey.derive(f.path);
+        it("should return an object read for JSON serialization", async function () {
+          var hdkey = await HDKey.fromMasterSeed(hexToU8(f.seed));
+          var childkey = await hdkey.derive(f.path);
 
           var obj = {
             xpriv: f.private,
             xpub: f.public,
           };
 
-          assert.deepEqual(childkey.toJSON(), obj);
+          assert.deepEqual(await childkey.toJSON(), obj);
 
-          var newKey = HDKey.fromJSON(obj);
-          assert.strictEqual(newKey.getPrivateExtendedKey(), f.private);
-          assert.strictEqual(newKey.getPublicExtendedKey(), f.public);
+          var newKey = await HDKey.fromJSON(obj);
+          assert.strictEqual(await newKey.getPrivateExtendedKey(), f.private);
+          assert.strictEqual(await newKey.getPublicExtendedKey(), f.public);
         });
       });
-    });
+    }
   });
 
   describe("- privateKey", function () {
-    it("should throw an error if incorrect key size", function () {
+    it("should throw an error if incorrect key size", async function () {
       var hdkey = HDKey.create();
-      assert.throws(function () {
-        hdkey.setPrivateKey(Uint8Array.from([1, 2, 3, 4]));
+      assert.rejects(async function () {
+        await hdkey.setPrivateKey(Uint8Array.from([1, 2, 3, 4]));
       }, /key must be 32/);
     });
   });
 
   describe("- publicKey", function () {
-    it("should throw an error if incorrect key size", function () {
-      assert.throws(function () {
+    it("should throw an error if incorrect key size", async function () {
+      assert.rejects(async function () {
         var hdkey = HDKey.create();
-        hdkey.setPublicKey(Uint8Array.from([1, 2, 3, 4]));
+        await hdkey.setPublicKey(Uint8Array.from([1, 2, 3, 4]));
       }, /key must be 33 or 65/);
     });
 
-    it("should not throw if key is 33 bytes (compressed)", function () {
+    it("should not throw if key is 33 bytes (compressed)", async function () {
       var rnd = crypto.randomBytes(32);
       var priv = new Uint8Array(rnd);
 
       var pub = curve.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(true);
       assert.equal(pub.length, 33);
       var hdkey = HDKey.create();
-      hdkey.setPublicKey(new Uint8Array(pub));
+      await hdkey.setPublicKey(new Uint8Array(pub));
     });
 
-    it("should not throw if key is 65 bytes (not compressed)", function () {
+    it("should not throw if key is 65 bytes (not compressed)", async function () {
       var rnd = crypto.randomBytes(32);
       var priv = new Uint8Array(rnd);
 
       var pub = curve.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(false);
       assert.equal(pub.length, 65);
       var hdkey = HDKey.create();
-      hdkey.setPublicKey(new Uint8Array(pub));
+      await hdkey.setPublicKey(new Uint8Array(pub));
     });
   });
 
   describe("+ fromExtendedKey()", function () {
     describe("> when private", function () {
-      it("should parse it", function () {
+      it("should parse it", async function () {
         // m/0/2147483647'/1/2147483646'/2
         var key =
           "xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j";
-        var hdkey = HDKey.fromExtendedKey(key);
+        var hdkey = await HDKey.fromExtendedKey(key);
         assert.equal(hdkey.versions.private, 0x0488ade4);
         assert.equal(hdkey.versions.public, 0x0488b21e);
         assert.equal(hdkey.depth, 5);
@@ -112,11 +113,11 @@ describe("hdkey", function () {
     });
 
     describe("> when public", function () {
-      it("should parse it", function () {
+      it("should parse it", async function () {
         // m/0/2147483647'/1/2147483646'/2
         var key =
           "xpub6FnCn6nSzZAw5Tw7cgR9bi15UV96gLZhjDstkXXxvCLsUXBGXPdSnLFbdpq8p9HmGsApME5hQTZ3emM2rnY5agb9rXpVGyy3bdW6EEgAtqt";
-        var hdkey = HDKey.fromExtendedKey(key);
+        var hdkey = await HDKey.fromExtendedKey(key);
         assert.equal(hdkey.versions.private, 0x0488ade4);
         assert.equal(hdkey.versions.public, 0x0488b21e);
         assert.equal(hdkey.depth, 5);
@@ -137,11 +138,11 @@ describe("hdkey", function () {
         );
       });
 
-      it("should parse it without verification", function () {
+      it("should parse it without verification", async function () {
         // m/0/2147483647'/1/2147483646'/2
         var key =
           "xpub6FnCn6nSzZAw5Tw7cgR9bi15UV96gLZhjDstkXXxvCLsUXBGXPdSnLFbdpq8p9HmGsApME5hQTZ3emM2rnY5agb9rXpVGyy3bdW6EEgAtqt";
-        var hdkey = HDKey.fromExtendedKey(key, null, false);
+        var hdkey = await HDKey.fromExtendedKey(key, null, false);
         assert.equal(hdkey.versions.private, 0x0488ade4);
         assert.equal(hdkey.versions.public, 0x0488b21e);
         assert.equal(hdkey.depth, 5);
@@ -165,15 +166,15 @@ describe("hdkey", function () {
   });
 
   describe("> when signing", function () {
-    it("should work", function () {
+    it("should work", async function () {
       var key =
         "xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j";
-      var hdkey = HDKey.fromExtendedKey(key);
+      var hdkey = await HDKey.fromExtendedKey(key);
 
       var ma = new Uint8Array(32);
       var mb = new Uint8Array(Buffer.alloc(32, 8));
-      var a = hdkey.sign(ma);
-      var b = hdkey.sign(mb);
+      var a = await hdkey.sign(ma);
+      var b = await hdkey.sign(mb);
       assert.equal(
         u8ToHex(a),
         "6ba4e554457ce5c1f1d7dbd10459465e39219eb9084ee23270688cbe0d49b52b7905d5beb28492be439a3250e9359e0390f844321b65f1a88ce07960dd85da06",
@@ -182,64 +183,67 @@ describe("hdkey", function () {
         u8ToHex(b),
         "dfae85d39b73c9d143403ce472f7c4c8a5032c13d9546030044050e7d39355e47a532e5c0ae2a25392d97f5e55ab1288ef1e08d5c034bad3b0956fbbab73b381",
       );
-      assert.equal(hdkey.verify(ma, a), true);
-      assert.equal(hdkey.verify(mb, b), true);
-      assert.equal(hdkey.verify(new Uint8Array(32), new Uint8Array(64)), false);
-      assert.equal(hdkey.verify(ma, b), false);
-      assert.equal(hdkey.verify(mb, a), false);
+      assert.equal(await hdkey.verify(ma, a), true);
+      assert.equal(await hdkey.verify(mb, b), true);
+      assert.equal(
+        await hdkey.verify(new Uint8Array(32), new Uint8Array(64)),
+        false,
+      );
+      assert.equal(await hdkey.verify(ma, b), false);
+      assert.equal(await hdkey.verify(mb, a), false);
 
-      assert.throws(function () {
-        hdkey.verify(new Uint8Array(99), a);
+      assert.rejects(async function () {
+        await hdkey.verify(new Uint8Array(99), a);
       }, /message.*length/);
-      assert.throws(function () {
-        hdkey.verify(ma, new Uint8Array(99));
+      assert.rejects(async function () {
+        await hdkey.verify(ma, new Uint8Array(99));
       }, /signature.*length/);
     });
   });
 
   describe("> when deriving public key", function () {
-    it("should work", function () {
+    it("should work", async function () {
       var key =
         "xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EGMcet8";
-      var hdkey = HDKey.fromExtendedKey(key);
+      var hdkey = await HDKey.fromExtendedKey(key);
 
       var path = "m/3353535/2223/0/99424/4/33";
-      var derivedHDKey = hdkey.derive(path);
+      var derivedHDKey = await hdkey.derive(path);
 
       var expected =
         "xpub6JdKdVJtdx6sC3nh87pDvnGhotXuU5Kz6Qy7Piy84vUAwWSYShsUGULE8u6gCivTHgz7cCKJHiXaaMeieB4YnoFVAsNgHHKXJ2mN6jCMbH1";
-      assert.equal(derivedHDKey.getPublicExtendedKey(), expected);
+      assert.equal(await derivedHDKey.getPublicExtendedKey(), expected);
     });
   });
 
   describe("> when private key integer is less than 32 bytes", function () {
-    it("should work", function () {
+    it("should work", async function () {
       var seed = "000102030405060708090a0b0c0d0e0f";
-      var masterKey = HDKey.fromMasterSeed(hexToU8(seed));
+      var masterKey = await HDKey.fromMasterSeed(hexToU8(seed));
 
-      var newKey = masterKey.derive("m/44'/6'/4'");
+      var newKey = await masterKey.derive("m/44'/6'/4'");
       var expected =
         "xprv9ymoag6W7cR6KBcJzhCM6qqTrb3rRVVwXKzwNqp1tDWcwierEv3BA9if3ARHMhMPh9u2jNoutcgpUBLMfq3kADDo7LzfoCnhhXMRGX3PXDx";
-      assert.equal(newKey.getPrivateExtendedKey(), expected);
+      assert.equal(await newKey.getPrivateExtendedKey(), expected);
     });
   });
 
   describe("HARDENED_OFFSET", function () {
-    it("should be set", function () {
+    it("should be set", async function () {
       assert(HDKey.HARDENED_OFFSET);
     });
   });
 
   describe("> when private key has leading zeros", function () {
-    it("will include leading zeros when hashing to derive child", function () {
+    it("will include leading zeros when hashing to derive child", async function () {
       var key =
         "xprv9s21ZrQH143K3ckY9DgU79uMTJkQRLdbCCVDh81SnxTgPzLLGax6uHeBULTtaEtcAvKjXfT7ZWtHzKjTpujMkUd9dDb8msDeAfnJxrgAYhr";
-      var hdkey = HDKey.fromExtendedKey(key);
+      var hdkey = await HDKey.fromExtendedKey(key);
       assert.equal(
         u8ToHex(hdkey.getPrivateKey()),
         "00000055378cf5fafb56c711c674143f9b0ee82ab0ba2924f19b64f5ae7cdbfd",
       );
-      var derived = hdkey.derive("m/44'/0'/0'/0/0'");
+      var derived = await hdkey.derive("m/44'/0'/0'/0/0'");
       assert.equal(
         u8ToHex(derived.getPrivateKey()),
         "3348069561d2a0fb925e74bf198762acc47dce7db27372257d2d959a9e6f8aeb",
@@ -248,63 +252,66 @@ describe("hdkey", function () {
   });
 
   describe("> when private key is null", function () {
-    it("privateExtendedKey should return null and not throw", function () {
+    it("privateExtendedKey should return null and not throw", async function () {
       var seed = "000102030405060708090a0b0c0d0e0f";
-      var masterKey = HDKey.fromMasterSeed(hexToU8(seed));
+      var masterKey = await HDKey.fromMasterSeed(hexToU8(seed));
 
-      assert.ok(masterKey.getPrivateExtendedKey(), "xpriv is truthy");
+      assert.ok(await masterKey.getPrivateExtendedKey(), "xpriv is truthy");
       masterKey.wipePrivateData();
 
-      assert.doesNotThrow(function () {
-        masterKey.getPrivateExtendedKey();
+      assert.doesNotThrow(async function () {
+        await masterKey.getPrivateExtendedKey();
       });
 
-      assert.ok(!masterKey.getPrivateExtendedKey(), "xpriv is falsy");
+      assert.ok(!(await masterKey.getPrivateExtendedKey()), "xpriv is falsy");
     });
   });
 
   describe(" - when the path given to derive contains only the master extended key", function () {
-    const hdKeyInstance = HDKey.fromMasterSeed(hexToU8(fixtures.valid[0].seed));
-
-    it("should return the same hdkey instance", function () {
-      assert.equal(hdKeyInstance.derive("m"), hdKeyInstance);
-      assert.equal(hdKeyInstance.derive("M"), hdKeyInstance);
-      assert.equal(hdKeyInstance.derive("m'"), hdKeyInstance);
-      assert.equal(hdKeyInstance.derive("M'"), hdKeyInstance);
+    it("should return the same hdkey instance", async function () {
+      const hdKeyInstance = await HDKey.fromMasterSeed(
+        hexToU8(fixtures.valid[0].seed),
+      );
+      assert.equal(await hdKeyInstance.derive("m"), hdKeyInstance);
+      assert.equal(await hdKeyInstance.derive("M"), hdKeyInstance);
+      assert.equal(await hdKeyInstance.derive("m'"), hdKeyInstance);
+      assert.equal(await hdKeyInstance.derive("M'"), hdKeyInstance);
     });
   });
 
   describe(" - when the path given to derive does not begin with master extended key", function () {
-    it("should throw an error", function () {
-      assert.throws(function () {
+    it("should throw an error", async function () {
+      assert.rejects(async function () {
         const hdkey = HDKey.create();
-        hdkey.derive("123");
+        await hdkey.derive("123");
       }, /Path must start with "m" or "M"/);
     });
   });
 
   describe("- after wipePrivateData()", function () {
-    it("should not have private data", function () {
-      const hdkey = HDKey.fromMasterSeed(
-        hexToU8(fixtures.valid[6].seed),
+    it("should not have private data", async function () {
+      const hdkey = (
+        await HDKey.fromMasterSeed(hexToU8(fixtures.valid[6].seed))
       ).wipePrivateData();
       assert.equal(hdkey.getPrivateKey(), null);
-      assert.equal(hdkey.getPrivateExtendedKey(), null);
-      assert.throws(
-        () => hdkey.sign(new Uint8Array(32)),
-        "shouldn't be able to sign",
+      assert.equal(await hdkey.getPrivateExtendedKey(), null);
+      assert.rejects(async function () {
+        await hdkey.sign(new Uint8Array(32));
+      }, "shouldn't be able to sign");
+      const childKey = await hdkey.derive("m/0");
+      assert.equal(
+        await childKey.getPublicExtendedKey(),
+        fixtures.valid[7].public,
       );
-      const childKey = hdkey.derive("m/0");
-      assert.equal(childKey.getPublicExtendedKey(), fixtures.valid[7].public);
       assert.equal(childKey.getPrivateKey(), null);
-      assert.equal(childKey.getPrivateExtendedKey(), null);
+      assert.equal(await childKey.getPrivateExtendedKey(), null);
     });
 
-    it("should have correct data", function () {
+    it("should have correct data", async function () {
       // m/0/2147483647'/1/2147483646'/2
       const key =
         "xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j";
-      const hdkey = HDKey.fromExtendedKey(key).wipePrivateData();
+      const hdkey = (await HDKey.fromExtendedKey(key)).wipePrivateData();
       assert.equal(hdkey.versions.private, 0x0488ade4);
       assert.equal(hdkey.versions.public, 0x0488b21e);
       assert.equal(hdkey.depth, 5);
@@ -324,35 +331,41 @@ describe("hdkey", function () {
       );
     });
 
-    it("should be able to verify signatures", function () {
-      const fullKey = HDKey.fromMasterSeed(fixtures.valid[0].seed);
+    it("should be able to verify signatures", async function () {
+      const fullKey = await HDKey.fromMasterSeed(fixtures.valid[0].seed);
       // using JSON methods to clone before mutating
-      const wipedKey = HDKey.fromJSON(fullKey.toJSON()).wipePrivateData();
+      const wipedKey = (
+        await HDKey.fromJSON(await fullKey.toJSON())
+      ).wipePrivateData();
 
       const hash = new Uint8Array(Buffer.alloc(32, 8));
-      assert.ok(wipedKey.verify(hash, fullKey.sign(hash)));
+      const sig = await fullKey.sign(hash);
+      assert.ok(await wipedKey.verify(hash, sig));
     });
 
-    it("should not throw if called on hdkey without private data", function () {
-      const hdkey = HDKey.fromExtendedKey(fixtures.valid[0].public);
+    it("should not throw if called on hdkey without private data", async function () {
+      const hdkey = await HDKey.fromExtendedKey(fixtures.valid[0].public);
       assert.doesNotThrow(() => hdkey.wipePrivateData());
-      assert.equal(hdkey.getPublicExtendedKey(), fixtures.valid[0].public);
+      assert.equal(
+        await hdkey.getPublicExtendedKey(),
+        fixtures.valid[0].public,
+      );
     });
   });
 
   describe("Deriving a child key does not mutate the internal state", function () {
-    it("should not mutate it when deriving with a private key", function () {
-      const hdkey = HDKey.fromExtendedKey(fixtures.valid[0].private);
+    it("should not mutate it when deriving with a private key", async function () {
+      const hdkey = await HDKey.fromExtendedKey(fixtures.valid[0].private);
       const path = "m/123";
       const privateKeyBefore = u8ToHex(hdkey.getPrivateKey());
 
-      const child = hdkey.derive(path);
+      const child = await hdkey.derive(path);
       assert.equal(u8ToHex(hdkey.getPrivateKey()), privateKeyBefore);
 
-      const child2 = hdkey.derive(path);
+      const child2 = await hdkey.derive(path);
       assert.equal(u8ToHex(hdkey.getPrivateKey()), privateKeyBefore);
 
-      const child3 = hdkey.derive(path);
+      const child3 = await hdkey.derive(path);
       assert.equal(u8ToHex(hdkey.getPrivateKey()), privateKeyBefore);
 
       assert.equal(
@@ -365,20 +378,20 @@ describe("hdkey", function () {
       );
     });
 
-    it("should not mutate it when deriving without a private key", function () {
-      const hdkey = HDKey.fromExtendedKey(fixtures.valid[0].private);
+    it("should not mutate it when deriving without a private key", async function () {
+      const hdkey = await HDKey.fromExtendedKey(fixtures.valid[0].private);
       const path = "m/123/123/123";
       hdkey.wipePrivateData();
 
       const publicKeyBefore = u8ToHex(hdkey.publicKey);
 
-      const child = hdkey.derive(path);
+      const child = await hdkey.derive(path);
       assert.equal(u8ToHex(hdkey.publicKey), publicKeyBefore);
 
-      const child2 = hdkey.derive(path);
+      const child2 = await hdkey.derive(path);
       assert.equal(u8ToHex(hdkey.publicKey), publicKeyBefore);
 
-      const child3 = hdkey.derive(path);
+      const child3 = await hdkey.derive(path);
       assert.equal(u8ToHex(hdkey.publicKey), publicKeyBefore);
 
       assert.equal(
