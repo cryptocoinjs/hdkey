@@ -33,8 +33,7 @@
     "mocha-lcov-reporter": "0.0.1"
   },
   "dependencies": {
-    "bs58check": "^2.1.2",
-    "ripemd160": "^2.0.2"
+    "dashkeys": "^0.9.1"
   },
   "scripts": {
     "lint": "npx -p typescript@4.x -- tsc -p ./jsconfig.json",
