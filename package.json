@@ -24,12 +24,9 @@
   "files": [],
   "devDependencies": {
     "bigi": "^1.1.0",
-    "coveralls": "^3.0.4",
     "ecurve": "^1.0.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^6.1.4",
-    "mocha-lcov-reporter": "0.0.1",
-    "mochify": "^6.3.0"
+    "mocha": "^10.2.0",
+    "mocha-lcov-reporter": "0.0.1"
   },
   "dependencies": {
     "bs58check": "^2.1.2",
@@ -38,11 +35,11 @@
   },
   "scripts": {
     "lint": "npx -p typescript@4.x -- tsc -p ./jsconfig.json",
-    "browser-test": "mochify --wd -R spec",
+    "browser-test": "npx mochify@6 --wd -R spec",
     "test": "mocha",
     "unit": "mocha",
-    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --reporter list test/*.js",
-    "coveralls": "npm run-script coverage && node ./node_modules/.bin/coveralls < coverage/lcov.info",
+    "coverage": "npx istanbul@0.4 cover ./node_modules/.bin/_mocha -- --reporter list test/*.js",
+    "coveralls": "npm run-script coverage && npx coveralls@3 < coverage/lcov.info",
     "bump": "npm version -m \"chore(release): bump to v%s\"",
     "fmt": "npx -p prettier@2.x -- prettier -w '**/*.{js,md}'"
   }
