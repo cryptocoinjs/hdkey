@@ -467,7 +467,9 @@ async function sign(hdkey, hash) {
     throw new Error("Private Key must be set");
   }
 
-  let sigOpts = { canonical: true };
+  // Note: `extraEntropy: null` for testing
+  // (normally we'd want this to be `true`, or `crypto.getRandomValues(32)`)
+  let sigOpts = { canonical: true, extraEntropy: null };
   let der = await Secp256k1.sign(hash, _privateKey, sigOpts);
   let sig = new Uint8Array(64);
 
