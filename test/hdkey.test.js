@@ -8,6 +8,8 @@ var curve = ecurve.getCurveByName("secp256k1");
 var HDKey = require("../");
 var fixtures = require("./fixtures/hdkey");
 
+var Secp256k1 = require("@dashincubator/secp256k1");
+
 // trinity: mocha
 /* global describe it */
 
@@ -180,8 +182,8 @@ describe("hdkey", function () {
 
       var ma = new Uint8Array(32);
       var mb = new Uint8Array(Buffer.alloc(32, 8));
-      var a = await hdkey.sign(ma);
-      var b = await hdkey.sign(mb);
+      var a = await sign(hdkey, ma);
+      var b = await sign(hdkey, mb);
       assert.equal(
         u8ToHex(a),
         "6ba4e554457ce5c1f1d7dbd10459465e39219eb9084ee23270688cbe0d49b52b7905d5beb28492be439a3250e9359e0390f844321b65f1a88ce07960dd85da06",
@@ -190,20 +192,20 @@ describe("hdkey", function () {
         u8ToHex(b),
         "dfae85d39b73c9d143403ce472f7c4c8a5032c13d9546030044050e7d39355e47a532e5c0ae2a25392d97f5e55ab1288ef1e08d5c034bad3b0956fbbab73b381",
       );
-      assert.equal(await hdkey.verify(ma, a), true);
-      assert.equal(await hdkey.verify(mb, b), true);
+      assert.equal(await verify(hdkey, ma, a), true);
+      assert.equal(await verify(hdkey, mb, b), true);
       assert.equal(
-        await hdkey.verify(new Uint8Array(32), new Uint8Array(64)),
+        await verify(hdkey, new Uint8Array(32), new Uint8Array(64)),
         false,
       );
-      assert.equal(await hdkey.verify(ma, b), false);
-      assert.equal(await hdkey.verify(mb, a), false);
+      assert.equal(await verify(hdkey, ma, b), false);
+      assert.equal(await verify(hdkey, mb, a), false);
 
       assert.rejects(async function () {
-        await hdkey.verify(new Uint8Array(99), a);
+        await verify(hdkey, new Uint8Array(99), a);
       }, /message.*length/);
       assert.rejects(async function () {
-        await hdkey.verify(ma, new Uint8Array(99));
+        await verify(hdkey, ma, new Uint8Array(99));
       }, /signature.*length/);
     });
   });
@@ -303,7 +305,7 @@ describe("hdkey", function () {
       assert.equal(hdkey.getPrivateKey(), null);
       assert.equal(await hdkey.getPrivateExtendedKey(), null);
       assert.rejects(async function () {
-        await hdkey.sign(new Uint8Array(32));
+        await sign(hdkey, new Uint8Array(32));
       }, "shouldn't be able to sign");
       const childKey = await hdkey.derive("m/0");
       assert.equal(
@@ -349,8 +351,8 @@ describe("hdkey", function () {
       wipedKey.wipePrivateData();
 
       const hash = new Uint8Array(Buffer.alloc(32, 8));
-      const sig = await fullKey.sign(hash);
-      assert.ok(await wipedKey.verify(hash, sig));
+      const sig = await sign(fullKey, hash);
+      assert.ok(await verify(wipedKey, hash, sig));
     });
 
     it("should not throw if called on hdkey without private data", async function () {
@@ -457,4 +459,83 @@ function u8ToHex(u8) {
   });
 
   return hex.join("");
+}
+
+async function sign(hdkey, hash) {
+  let _privateKey = hdkey.getPrivateKey();
+  if (!_privateKey) {
+    throw new Error("Private Key must be set");
+  }
+
+  let sigOpts = { canonical: true };
+  let der = await Secp256k1.sign(hash, _privateKey, sigOpts);
+  let sig = new Uint8Array(64);
+
+  let rSizeIndex = 3;
+  let offset = rSizeIndex + 1;
+  let rSize = der[rSizeIndex];
+  if (0x21 === rSize) {
+    offset += 1;
+  }
+  let r = der.subarray(offset, offset + 32);
+  sig.set(r, 0);
+
+  offset += 2 + 32;
+  let sLen = der[offset - 1];
+  if (0x21 === sLen) {
+    offset += 1;
+  }
+  let s = der.subarray(offset, offset + 32);
+  sig.set(s, 32);
+
+  return sig;
+}
+
+async function verify(hdkey, hash, sig) {
+  assert(hash.length === 32, "message length must be 32 bytes.");
+  assert(sig.length === 64, "signature length must be 64 bytes.");
+  let verifyOpts = { strict: true }; // require canonical
+
+  let r = sig.subarray(0, 32);
+  let s = sig.subarray(32, 64);
+
+  let len = 2 + 2 + 32 + 2 + 32;
+  if (sig[0] >= 0x80) {
+    len += 1;
+  }
+  if (sig[32] >= 0x80) {
+    len += 1;
+  }
+
+  let der = new Uint8Array(len);
+  der[0] = 0x30;
+  der[1] = 0x44;
+
+  let offset = 1;
+  der[offset] = 0x02;
+  offset += 1;
+  if (r[0] < 0x80) {
+    der[offset] = 0x20;
+  } else {
+    der[offset] = 0x21;
+    offset += 1;
+    der[offset] = 0x00;
+  }
+  offset += 1;
+  der.set(r, offset);
+  offset += 32;
+
+  der[offset] = 0x02;
+  offset += 1;
+  if (s[0] < 0x80) {
+    der[offset] = 0x20;
+  } else {
+    der[offset] = 0x21;
+    offset += 1;
+    der[offset] = 0x00;
+  }
+  offset += 1;
+  der.set(s, offset);
+
+  return await Secp256k1.verify(sig, hash, hdkey.publicKey, verifyOpts);
 }
