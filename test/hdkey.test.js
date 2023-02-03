@@ -23,23 +23,30 @@ describe("hdkey", function () {
         assert.equal(await childkey.getPublicExtendedKey(), f.public);
       });
 
-      describe("> " + f.path + " toJSON() / fromJSON()", function () {
-        it("should return an object read for JSON serialization", async function () {
-          var hdkey = await HDKey.fromMasterSeed(hexToU8(f.seed));
-          var childkey = await hdkey.derive(f.path);
+      describe(
+        "> " + f.path + " get<Private|Public>ExtendedKey() / fromExtendedKey()",
+        function () {
+          it("should return an object read for JSON serialization", async function () {
+            var hdkey = await HDKey.fromMasterSeed(hexToU8(f.seed));
+            var childkey = await hdkey.derive(f.path);
 
-          var obj = {
-            xpriv: f.private,
-            xpub: f.public,
-          };
+            var obj = {
+              xpriv: f.private,
+              xpub: f.public,
+            };
 
-          assert.deepEqual(await childkey.toJSON(), obj);
+            var childObj = {
+              xpriv: await childkey.getPrivateExtendedKey(),
+              xpub: await childkey.getPublicExtendedKey(),
+            };
+            assert.deepEqual(childObj, obj);
 
-          var newKey = await HDKey.fromJSON(obj);
-          assert.strictEqual(await newKey.getPrivateExtendedKey(), f.private);
-          assert.strictEqual(await newKey.getPublicExtendedKey(), f.public);
-        });
-      });
+            var newKey = await HDKey.fromExtendedKey(childObj.xpriv);
+            assert.strictEqual(await newKey.getPrivateExtendedKey(), f.private);
+            assert.strictEqual(await newKey.getPublicExtendedKey(), f.public);
+          });
+        },
+      );
     }
   });
 
@@ -332,11 +339,14 @@ describe("hdkey", function () {
     });
 
     it("should be able to verify signatures", async function () {
-      const fullKey = await HDKey.fromMasterSeed(fixtures.valid[0].seed);
-      // using JSON methods to clone before mutating
-      const wipedKey = (
-        await HDKey.fromJSON(await fullKey.toJSON())
-      ).wipePrivateData();
+      const fullKey = await HDKey.fromMasterSeed(
+        hexToU8(fixtures.valid[0].seed),
+      );
+      // using get/from methods to clone before mutating
+      const wipedKey = await HDKey.fromExtendedKey(
+        await fullKey.getPrivateExtendedKey(),
+      );
+      wipedKey.wipePrivateData();
 
       const hash = new Uint8Array(Buffer.alloc(32, 8));
       const sig = await fullKey.sign(hash);
