@@ -1,5 +1,5 @@
 {
-  "name": "hdkey",
+  "name": "@exodus/hdkey",
   "version": "2.1.0",
   "description": "Bitcoin BIP32 hierarchical deterministic keys",
   "main": "lib/hdkey.js",
