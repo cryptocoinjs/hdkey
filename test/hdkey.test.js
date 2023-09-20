@@ -145,10 +145,10 @@ describe('hdkey', function () {
 
       assert.throws(function () {
         hdkey.verify(Buffer.alloc(99), a)
-      }, /message.*length/)
+      }, /Expected Scalar/)
       assert.throws(function () {
         hdkey.verify(ma, Buffer.alloc(99))
-      }, /signature.*length/)
+      }, /Expected Signature/)
     })
   })
 
