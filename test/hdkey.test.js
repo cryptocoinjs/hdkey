@@ -66,12 +66,36 @@ describe('hdkey', function () {
       hdkey.publicKey = pub
     })
 
+    it('should not throw if key is 33 bytes (compressed)', function () {
+      var priv = Buffer.from(fixtures.rawHex[0].private, 'hex')
+      var pub = curve.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(true)
+      assert.equal(pub.length, 33)
+      var hdkey = new HDKey()
+      hdkey.publicKey = pub
+    })
+
     it('should not throw if key is 65 bytes (not compressed)', function () {
       var priv = secureRandom.randomBuffer(32)
       var pub = curve.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(false)
       assert.equal(pub.length, 65)
       var hdkey = new HDKey()
       hdkey.publicKey = pub
+    })
+
+    it('should not throw if key is 65 bytes (not compressed)', function () {
+      var priv = Buffer.from(fixtures.rawHex[1].private, 'hex')
+      var pub = curve.G.multiply(BigInteger.fromBuffer(priv)).getEncoded(false)
+      assert.equal(pub.length, 65)
+      var hdkey = new HDKey()
+      hdkey.publicKey = pub
+    })
+
+    fixtures.rawHex.forEach(function (f) {
+      it('should convert to correct public key', function () {
+        var hdkey = new HDKey()
+        hdkey.privateKey = Buffer.from(f.private, 'hex')
+        assert.equal(hdkey.publicKey.toString('hex'), f.public)
+      })
     })
   })
 
