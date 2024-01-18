@@ -48,6 +48,14 @@ describe('hdkey', function () {
         hdkey.privateKey = Buffer.from([1, 2, 3, 4])
       }, /key must be 32/)
     })
+
+    fixtures.rawHex.forEach(function (f) {
+      it('should convert to correct public key', function () {
+        var hdkey = new HDKey()
+        hdkey.privateKey = Buffer.from(f.private, 'hex')
+        assert.equal(hdkey.publicKey.toString('hex'), f.public)
+      })
+    })
   })
 
   describe('- publicKey', function () {
@@ -88,14 +96,6 @@ describe('hdkey', function () {
       assert.equal(pub.length, 65)
       var hdkey = new HDKey()
       hdkey.publicKey = pub
-    })
-
-    fixtures.rawHex.forEach(function (f) {
-      it('should convert to correct public key', function () {
-        var hdkey = new HDKey()
-        hdkey.privateKey = Buffer.from(f.private, 'hex')
-        assert.equal(hdkey.publicKey.toString('hex'), f.public)
-      })
     })
   })
 
